@@ -15,14 +15,16 @@ int main() {
     srand(time(NULL));
 
     for (int i=0;i<SIZE_OF_ARRAY;i++){
-        array[i] = i*i;
+        array[i] = rand()%100;
         cout << array[i] << ' ';
     }
     cout << endl << "Введите искомое число" << endl;
     cin >> key;
-    result = BinarySearch(array,key);
-    if (result) cout << "Искомое число стоит на позиции: " << result << endl;
-    else cout << "Поиск не дал результатов" << endl;
+    try {
+        cout << "Искомый элемент стоит на позиции: " << BinarySearch(array,key);
+    } catch (char const* message) {
+        cout << message;
+    }
     return 0;
 }
 
@@ -37,8 +39,8 @@ int BinarySearch (int *array, int key) {
             else if (key > array[mid]) left = mid + 1;
         }
 
-    } else return 0;
-    return 0;
+    } else throw "Массив не отсортирован";
+    throw "Поиск не дал результатов";
 }
 
 int trueSort (int *array){

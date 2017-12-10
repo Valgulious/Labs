@@ -6,27 +6,46 @@ int BinarySearch (int[],int);
 int InterpolatingSearch (int[], int);
 int trueSort(int[]);
 
-int const SIZE_OF_ARRAY = 10;
+int const SIZE_OF_ARRAY = 13;
 
 int main() {
-    int result;
     setlocale(LC_ALL, "rus");
     srand(time(NULL));
 
-    int array[SIZE_OF_ARRAY][SIZE_OF_ARRAY];
+    int array[SIZE_OF_ARRAY][SIZE_OF_ARRAY] =
+            {{0,0,0,0,2},
+             {0,0,0,0,2},
+             {1,1,0,2,3},
+             {2,1,0,2,4},
+             {3,2,0,2,5},
+             {4,2,0,2,10},
+             {5,3,0,2,20},
+             {6,3,0,2,30},
+             {7,4,0,2,31},
+             {8,5,2,2,32},
+             {9,6,2,2,33},
+             {10,71,8,2,34},
+             {11,80,10,2,35}};
     int array_for_search[SIZE_OF_ARRAY];
     int key(0);
 
-    for (int i=0;i<SIZE_OF_ARRAY;i++)
-        for (int j=0;j<SIZE_OF_ARRAY;j++) array[i][j] = 10*i + j;
-
-    for (int j=0;j<SIZE_OF_ARRAY;j++){
+//    for (int i=0;i<SIZE_OF_ARRAY;i++) {
+//        int t=0;
+//        for (int j = 0; j < SIZE_OF_ARRAY; j++) {
+//            t+=5;
+//            cin >> array[i][j];
+//            cout<<array[i][j]<<' ';
+//        }
+//       cout<<endl;
+//    }
+    cout << endl << "Введите искомое число" << endl;
+    cin >> key;
+    for (int j=0;j<5;j++){
         for (int i=0;i<SIZE_OF_ARRAY;i++){
             array_for_search[i] = array[i][j];
             cout << array_for_search[i] << ' ';
         }
-        cout << endl << "Введите искомое число" << endl;
-        cin >> key;
+        cout << endl;
         cout << "Результат бинарного поиска: ";
         try {
             cout << "Искомый элемент стоит на позиции: "

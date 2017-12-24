@@ -1,38 +1,51 @@
 #include <iostream>
+#include <chrono>
 
 using namespace std;
 /* ВНИМАНИЕ!!!! Сколько времнени занимает работа сортировки?*/
 void NonRecursiveQuickSort (int[]);
 void TooWayInsertion (int[]);
 
-const int SIZE_OF_ARRAY = 10;
+const int SIZE_OF_ARRAY = 100000;
 
-int swapCount(0), ifCount(0);
+long int swapCount(0), ifCount(0);
 
 int main() {
     setlocale(LC_ALL, "rus");
+
+    clock_t clock1;
+    double seconds;
 
     int array_for_QuickSort[SIZE_OF_ARRAY], array_for_InsSort[SIZE_OF_ARRAY];
     srand(time(NULL));
 
     for (int i=0;i<SIZE_OF_ARRAY;i++) {
-        array_for_QuickSort[i] = -50 + rand()%100;
+        array_for_QuickSort[i] = -50000 + rand()%100000;
         array_for_InsSort[i] = array_for_QuickSort[i];
         cout << array_for_QuickSort[i] << ' ';
     }
 
     cout << endl << "Результат Быстрой сортировки: ";
+    clock1 = clock();
     NonRecursiveQuickSort(array_for_QuickSort);
+    clock1 = clock() - clock1;
+    seconds = (double)clock1 / CLOCKS_PER_SEC;
     for (int i=0;i<SIZE_OF_ARRAY;i++) cout << array_for_QuickSort[i] << ' ';
     cout << endl << "Колличество обменов: " << swapCount;
     cout << endl << "Колличество сравнений: " << ifCount;
+    cout << endl << "Время выполнения сортировки: " << seconds << 's';
+
     ifCount = 0;
     swapCount = 0;
     cout << endl << "Результат сортировки Двухпутевыми вставками: ";
+    clock1 = clock();
     TooWayInsertion(array_for_InsSort);
+    clock1 = clock() - clock1;
+    seconds = (double)clock1 / CLOCKS_PER_SEC;
     for (int i=0;i<SIZE_OF_ARRAY;i++) cout << array_for_InsSort[i] << ' ';
     cout << endl << "Колличество обменов: " << swapCount;
     cout << endl << "Колличество сравнений: " << ifCount;
+    cout << endl << "Время выполнения сортировки: " << seconds << 's';
     cout << endl;
     return 0;
 }

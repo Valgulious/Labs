@@ -2,11 +2,10 @@
 #include <chrono>
 
 using namespace std;
-/* ВНИМАНИЕ!!!! Сколько времнени занимает работа сортировки?*/
 void NonRecursiveQuickSort (int[]);
-void TooWayInsertion (int[]);
+void TooWayInsertion (short int[]);
 
-const int SIZE_OF_ARRAY = 100000;
+const int SIZE_OF_ARRAY = 800000;
 
 long int swapCount(0), ifCount(0);
 
@@ -16,24 +15,25 @@ int main() {
     clock_t clock1;
     double seconds;
 
-    int array_for_QuickSort[SIZE_OF_ARRAY], array_for_InsSort[SIZE_OF_ARRAY];
+    short int  array_for_InsSort[SIZE_OF_ARRAY];
+    int *array_for_QuickSort = new int[SIZE_OF_ARRAY];
     srand(time(NULL));
 
     for (int i=0;i<SIZE_OF_ARRAY;i++) {
-        array_for_QuickSort[i] = -50000 + rand()%100000;
+        array_for_QuickSort[i] = rand()%10000;
         array_for_InsSort[i] = array_for_QuickSort[i];
         cout << array_for_QuickSort[i] << ' ';
     }
 
-    cout << endl << "Результат Быстрой сортировки: ";
-    clock1 = clock();
-    NonRecursiveQuickSort(array_for_QuickSort);
-    clock1 = clock() - clock1;
-    seconds = (double)clock1 / CLOCKS_PER_SEC;
-    for (int i=0;i<SIZE_OF_ARRAY;i++) cout << array_for_QuickSort[i] << ' ';
-    cout << endl << "Колличество обменов: " << swapCount;
-    cout << endl << "Колличество сравнений: " << ifCount;
-    cout << endl << "Время выполнения сортировки: " << seconds << 's';
+//    cout << endl << "Результат Быстрой сортировки: ";
+//    clock1 = clock();
+//    NonRecursiveQuickSort(array_for_QuickSort);
+//    clock1 = clock() - clock1;
+//    seconds = (double)clock1 / CLOCKS_PER_SEC;
+//    for (int i=0;i<SIZE_OF_ARRAY;i++) cout << array_for_QuickSort[i] << ' ';
+//    cout << endl << "Колличество обменов: " << swapCount;
+//    cout << endl << "Колличество сравнений: " << ifCount;
+//    cout << endl << "Время выполнения сортировки: " << seconds << 's';
 
     ifCount = 0;
     swapCount = 0;
@@ -89,8 +89,8 @@ void NonRecursiveQuickSort (int array[]){
     } while (s >= 0);
 }
 
-void TooWayInsertion (int array[]){
-    int array_for_sort[2*SIZE_OF_ARRAY+1];
+void TooWayInsertion (short int array[]){
+    short int array_for_sort[2*SIZE_OF_ARRAY+1];
     int left(0), right(0), k((2*SIZE_OF_ARRAY+1)/2), j(0);
 
     for (int i=0;i<2*SIZE_OF_ARRAY+1;i++) array_for_sort[i] = 0;

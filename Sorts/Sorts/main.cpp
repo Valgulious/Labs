@@ -5,7 +5,7 @@ using namespace std;
 void NonRecursiveQuickSort (int[]);
 void TooWayInsertion (short int[]);
 
-const int SIZE_OF_ARRAY = 800000;
+const int SIZE_OF_ARRAY = 10;
 
 long int swapCount(0), ifCount(0);
 
@@ -20,20 +20,20 @@ int main() {
     srand(time(NULL));
 
     for (int i=0;i<SIZE_OF_ARRAY;i++) {
-        array_for_QuickSort[i] = rand()%10000;
+        array_for_QuickSort[i] = 10-i; //rand()%10000;
         array_for_InsSort[i] = array_for_QuickSort[i];
         cout << array_for_QuickSort[i] << ' ';
     }
 
-//    cout << endl << "Результат Быстрой сортировки: ";
-//    clock1 = clock();
-//    NonRecursiveQuickSort(array_for_QuickSort);
-//    clock1 = clock() - clock1;
-//    seconds = (double)clock1 / CLOCKS_PER_SEC;
-//    for (int i=0;i<SIZE_OF_ARRAY;i++) cout << array_for_QuickSort[i] << ' ';
-//    cout << endl << "Колличество обменов: " << swapCount;
-//    cout << endl << "Колличество сравнений: " << ifCount;
-//    cout << endl << "Время выполнения сортировки: " << seconds << 's';
+    cout << endl << "Результат Быстрой сортировки: ";
+    clock1 = clock();
+    NonRecursiveQuickSort(array_for_QuickSort);
+    clock1 = clock() - clock1;
+    seconds = (double)clock1 / CLOCKS_PER_SEC;
+    for (int i=0;i<SIZE_OF_ARRAY;i++) cout << array_for_QuickSort[i] << ' ';
+    cout << endl << "Количество обменов: " << swapCount;
+    cout << endl << "Количество сравнений: " << ifCount;
+    cout << endl << "Время выполнения сортировки: " << seconds << 's';
 
     ifCount = 0;
     swapCount = 0;
@@ -42,9 +42,9 @@ int main() {
     TooWayInsertion(array_for_InsSort);
     clock1 = clock() - clock1;
     seconds = (double)clock1 / CLOCKS_PER_SEC;
-    for (int i=0;i<SIZE_OF_ARRAY;i++) cout << array_for_InsSort[i] << ' ';
-    cout << endl << "Колличество обменов: " << swapCount;
-    cout << endl << "Колличество сравнений: " << ifCount;
+    for (int i = 0; i < SIZE_OF_ARRAY; i++) cout << array_for_InsSort[i] << ' ';
+    cout << endl << "Количество обменов: " << swapCount;
+    cout << endl << "Количество сравнений: " << ifCount;
     cout << endl << "Время выполнения сортировки: " << seconds << 's';
     cout << endl;
     return 0;
@@ -52,7 +52,8 @@ int main() {
 
 void NonRecursiveQuickSort (int array[]){
     int i(0), j(0), L(0), R(0), s(0), x(0);
-    int low[SIZE_OF_ARRAY], high[SIZE_OF_ARRAY];
+    int *high = new int[SIZE_OF_ARRAY];
+    int *low = new int[SIZE_OF_ARRAY];
 
     low[0] = 0; high[0] = SIZE_OF_ARRAY-1;
     do {
@@ -73,10 +74,13 @@ void NonRecursiveQuickSort (int array[]){
                     ifCount++;
                 }
                 ifCount++;
-                if (i <= j) {
+                if (i < j) {
                     swap(array[i], array[j]);
                     swapCount++;
                     i++; j--;
+                } else if (i == j) {
+                    i++;j--;
+                    ifCount++;
                 }
                 ifCount++;
             } while (i<=j);
@@ -101,12 +105,12 @@ void TooWayInsertion (short int array[]){
             k++; left++; right--;
             ifCount+=2;
         }
-        ifCount+=2;
+        ifCount+=1;
         while ((k+left != k) && (array[i] < array_for_sort[k])){
             k--; left--; right++;
             ifCount+=2;
         }
-        ifCount+=2;
+        ifCount+=1;
         if (array[i] > array_for_sort[k]){
 
             if (left < right) {
@@ -145,6 +149,8 @@ void TooWayInsertion (short int array[]){
         }
         ifCount++;
     }
+//    for (int i=0;i<SIZE_OF_ARRAY*2+1;i++) cout << array_for_sort[i] << ' ';
+//    cout << endl;
     for (int i=k-left;i<SIZE_OF_ARRAY+(k-left);i++){
         array[j] = array_for_sort[i];
         j++;

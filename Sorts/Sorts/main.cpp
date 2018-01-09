@@ -57,13 +57,10 @@ void NonRecursiveQuickSort (int array[]){
 
     low[0] = 0; high[0] = SIZE_OF_ARRAY-1;
     do {
-        ifCount++;
         L = low[s]; R = high[s]; s--;
         do {
-            ifCount++;
             i = L; j = R; x = array[(L+R)/2];
             do {
-                ifCount++;
                 while (array[i] < x) {
                     i++;
                     ifCount++;
@@ -80,14 +77,11 @@ void NonRecursiveQuickSort (int array[]){
                     i++; j--;
                 } else if (i == j) {
                     i++;j--;
-                    ifCount++;
                 }
-                ifCount++;
             } while (i<=j);
             if (i < R) {
                 s++; low[s]=i; high[s]=R;
             }
-            ifCount++;
             R=j;
         } while (L < R);
     } while (s >= 0);
@@ -103,14 +97,14 @@ void TooWayInsertion (short int array[]){
     for (int i=1;i<SIZE_OF_ARRAY;i++){
         while ((k+right != k) && (array[i] > array_for_sort[k])){
             k++; left++; right--;
-            ifCount+=2;
+            ifCount++;
         }
-        ifCount+=1;
+        ifCount++;
         while ((k+left != k) && (array[i] < array_for_sort[k])){
             k--; left--; right++;
-            ifCount+=2;
+            ifCount++;
         }
-        ifCount+=1;
+        ifCount++;
         if (array[i] > array_for_sort[k]){
 
             if (left < right) {
@@ -128,7 +122,6 @@ void TooWayInsertion (short int array[]){
                 array_for_sort[k+1] = array[i];
                 right++;
             }
-            ifCount++;
         } else {
             if (left < right) {
                 for (int j=k-left-1;j<k-1;j++){
@@ -145,7 +138,6 @@ void TooWayInsertion (short int array[]){
                 array_for_sort[k] = array[i];
                 right++;
             }
-            ifCount++;
         }
         ifCount++;
     }

@@ -5,7 +5,7 @@ using namespace std;
 void NonRecursiveQuickSort (int[]);
 void TooWayInsertion (short int[]);
 
-const int SIZE_OF_ARRAY = 900000;
+const int SIZE_OF_ARRAY = 11;
 
 long int swapCount(0), ifCount(0);
 
@@ -15,14 +15,18 @@ int main() {
     clock_t clock1;
     double seconds;
 
-    short int  array_for_InsSort[SIZE_OF_ARRAY];
+    short int  array_for_InsSort[SIZE_OF_ARRAY] = {10,3,8,1,16,15,1,1,4,20,8};
     int *array_for_QuickSort = new int[SIZE_OF_ARRAY];
     srand(time(NULL));
 
+//    for (int i=0;i<SIZE_OF_ARRAY;i++) {
+//        array_for_QuickSort[i] = 10-i%4; //rand()%10000;
+//        array_for_InsSort[i] = array_for_QuickSort[i];
+//        cout << array_for_QuickSort[i] << ' ';
+//    }
     for (int i=0;i<SIZE_OF_ARRAY;i++) {
-        array_for_QuickSort[i] = 10-i%4; //rand()%10000;
-        array_for_InsSort[i] = array_for_QuickSort[i];
- //       cout << array_for_QuickSort[i] << ' ';
+        array_for_QuickSort[i] = array_for_InsSort[i];
+        cout << array_for_QuickSort[i] << ' ';
     }
 
     cout << endl << "Результат Быстрой сортировки: ";
@@ -30,7 +34,7 @@ int main() {
     NonRecursiveQuickSort(array_for_QuickSort);
     clock1 = clock() - clock1;
     seconds = (double)clock1 / CLOCKS_PER_SEC;
- //   for (int i=0;i<SIZE_OF_ARRAY;i++) cout << array_for_QuickSort[i] << ' ';
+    for (int i=0;i<SIZE_OF_ARRAY;i++) cout << array_for_QuickSort[i] << ' ';
     cout << endl << "Количество обменов: " << swapCount;
     cout << endl << "Количество сравнений: " << ifCount;
     cout << endl << "Время выполнения сортировки: " << seconds << 's';
@@ -42,7 +46,7 @@ int main() {
     TooWayInsertion(array_for_InsSort);
     clock1 = clock() - clock1;
     seconds = (double)clock1 / CLOCKS_PER_SEC;
-  //  for (int i = 0; i < SIZE_OF_ARRAY; i++) cout << array_for_InsSort[i] << ' ';
+    for (int i = 0; i < SIZE_OF_ARRAY; i++) cout << array_for_InsSort[i] << ' ';
     cout << endl << "Количество перестановок: " << swapCount;
     cout << endl << "Количество сравнений: " << ifCount;
     cout << endl << "Время выполнения сортировки: " << seconds << 's';

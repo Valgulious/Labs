@@ -15,7 +15,7 @@ int main() {
     clock_t clock1;
     double seconds;
 
-    short int  array_for_InsSort[SIZE_OF_ARRAY] = {10,3,8,1,16,15,1,1,4,20,8};
+    short int  array_for_InsSort[SIZE_OF_ARRAY] = {20,1,3,10,17,28,21,4,1,20,20};
     int *array_for_QuickSort = new int[SIZE_OF_ARRAY];
     srand(time(NULL));
 
@@ -154,6 +154,7 @@ void TooWayInsertion (short int array[]){
                 swapCount++;
             } else {
                 right++;
+                j++;
                 for (int u = right;u > j;u--) {
                     swap(array_for_sort[u],array_for_sort[u-1]);
                     swapCount++;

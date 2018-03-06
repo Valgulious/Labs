@@ -9,26 +9,24 @@ struct Hash {
     string FIO, name_of_lesson, class_number;
 };
 
-class HashTable {
+class HashTable
+{
 
 public:
-    Hash* hash_table;
-    HashTable(int n = 10, float k = 0.8) {
-        hash_table = new Hash[n];
-    }
 
-//    int Add(Hash){
-//
-//    }
-
-    ~HashTable(){
-        delete [] hash_table;
-    }
+    HashTable(int n = 10, float k = 0.8);
+    int addRecord (Hash);
+    int searchRecord (Hash);
+    int deleteRecord (Hash);
+    void print();
+    ~HashTable();
 
 private:
-    int hash1 (string class_number, int lesson_number) {
+    Hash* hash_table;
+    int SIZE;
 
-    }
+    int hash1 (string class_number, int lesson_number);
+    int hash2 ();
 
 };
 

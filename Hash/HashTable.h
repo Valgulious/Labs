@@ -5,8 +5,9 @@
 using namespace std;
 
 struct Hash {
-    unsigned short int status = 0, lesson_number;
-    string FIO, name_of_lesson, class_number;
+    int hash_key = -1;
+    unsigned short int status = 0;
+    string FIO = "----------", name_of_lesson = "--------", class_number = "----", lesson_number = "-";
 };
 
 class HashTable
@@ -14,7 +15,7 @@ class HashTable
 
 public:
 
-    HashTable(int n = 10, float k = 0.8);
+    HashTable(int n = 10, int k = 80);
     int addRecord (Hash);
     int searchRecord (Hash);
     int deleteRecord (Hash);
@@ -23,10 +24,14 @@ public:
 
 private:
     Hash* hash_table;
-    int SIZE;
+    int SIZE, count = 0;
+    int RATIO;
 
-    int hash1 (string class_number, int lesson_number);
-    int hash2 ();
+    int hash1 (string, string);
+    int hash2 (int);
+    void add(Hash, int);
+    bool compare(Hash, int);
+    void resizeTable();
 
 };
 

@@ -15,7 +15,7 @@ class HashTable
 
 public:
 
-    HashTable(int n = 10, int k = 80);
+    HashTable(int n = 10, float k = 0.8);
     int addRecord (Hash);
     int searchRecord (Hash);
     int deleteRecord (Hash);
@@ -25,7 +25,7 @@ public:
 private:
     Hash* hash_table;
     int SIZE, count = 0;
-    int RATIO;
+    float RATIO;
 
     int hash1 (string, string);
     int hash2 (int);

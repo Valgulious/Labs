@@ -1,7 +1,7 @@
 #include "HashTable.h"
 #include <cmath>
 
-HashTable::HashTable(int n, int k) {
+HashTable::HashTable(int n, float k) {
     hash_table = new Hash[n];
     SIZE = n;
     RATIO = k;
@@ -32,12 +32,12 @@ void HashTable::print() {
 
 int HashTable::hash1(string class_number, string lesson_number) {
     string s = class_number + lesson_number;
-    int a = ((int(s[0]) + int(s[1]))*2 + (int(s[2]) + int(s[3]))*3) * (int(s[4])*int(s[4]));
-    return sqrt(a)/100 - 10;
+    int a = int(s[0])+int(s[1])+int(s[2])+int(s[3])+int(s[4]);
+    return a%SIZE;
 }
 
 int HashTable::hash2 (int i) {
-    int a = i+3;
+    int a = i+(SIZE-1);
     if (a >= SIZE) return a-SIZE;
     else return a;
 }
@@ -49,12 +49,11 @@ void HashTable::add(Hash h, int i){
     hash_table[i].FIO = h.FIO;
     hash_table[i].name_of_lesson = h.name_of_lesson;
     hash_table[i].status = 1;
-    count += 1;
+    count++;
 }
 
 int HashTable::addRecord(Hash h) {
     int hash = hash1(h.class_number, h.lesson_number);
-    // сначала надо проверить есть ли в таблице такая же запись
     if (searchRecord(h)) {
         if (hash_table[hash].status == 0) {
             add(h, hash);
@@ -67,25 +66,52 @@ int HashTable::addRecord(Hash h) {
             add(h, hash);
         } else add(h, hash);
     } else return -1;
-    //написать увеличение/уменьшение размера таблицы
+    float b = float(count)/float(SIZE);
+    if ( b >= RATIO) resizeTable();
+    return 0;
+}
+
+void HashTable::resizeTable() {
+    Hash* new_table = new Hash[SIZE];
+    Hash* table;
+
+    for (int i = 0; i < SIZE; i++) {
+        new_table[i].status = hash_table[i].status;
+        new_table[i].hash_key = hash_table[i].hash_key;
+        new_table[i].lesson_number = hash_table[i].lesson_number;
+        new_table[i].class_number = hash_table[i].class_number;
+        new_table[i].name_of_lesson = hash_table[i].name_of_lesson;
+        new_table[i].FIO = hash_table[i].FIO;
+    }
+    delete [] hash_table;
+    hash_table = new Hash[SIZE*2];
+    SIZE = SIZE*2;
+    count = 0;
+    for (int i = 0; i < SIZE/2; i++){
+        if (new_table[i].status = 1) addRecord(new_table[i]);
+    }
+    delete [] new_table;
 }
 
 bool HashTable::compare(Hash h, int i) {
     if (hash_table[i].class_number == h.class_number
         and hash_table[i].lesson_number == h.lesson_number
         and hash_table[i].FIO == h.FIO
-        and hash_table[i].name_of_lesson == h.name_of_lesson) {
+        and hash_table[i].name_of_lesson == h.name_of_lesson
+        and hash_table[i].status == 1) {
         return true;
     } else return false;
 }
 
 int HashTable::searchRecord(Hash h) {
+    int deep = 0;
     int hash = hash1(h.class_number, h.lesson_number);
-    while (hash_table[hash].status == 1){
+    while (deep <= SIZE and hash_table[hash].status != 0){
         if (compare(h, hash)) return 0;
         else hash = hash2(hash);
+        deep++;
     }
-    return 1;
+    return -1;
 }
 
 int HashTable::deleteRecord(Hash h) {
@@ -93,6 +119,7 @@ int HashTable::deleteRecord(Hash h) {
     while (hash_table[hash].status == 1) {
         if (compare(h, hash)) {
             hash_table[hash].status = 2;
+            count--;
         } else hash = hash2(hash);
     }
 }

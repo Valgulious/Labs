@@ -73,7 +73,6 @@ int HashTable::addRecord(Hash h) {
 
 void HashTable::resizeTable() {
     Hash* new_table = new Hash[SIZE];
-    Hash* table;
 
     for (int i = 0; i < SIZE; i++) {
         new_table[i].status = hash_table[i].status;
@@ -82,13 +81,15 @@ void HashTable::resizeTable() {
         new_table[i].class_number = hash_table[i].class_number;
         new_table[i].name_of_lesson = hash_table[i].name_of_lesson;
         new_table[i].FIO = hash_table[i].FIO;
+        hash_table[i].status = 0;
+        
     }
     delete [] hash_table;
     hash_table = new Hash[SIZE*2];
     SIZE = SIZE*2;
     count = 0;
     for (int i = 0; i < SIZE/2; i++){
-        if (new_table[i].status = 1) addRecord(new_table[i]);
+        if (new_table[i].status == 1) addRecord(new_table[i]);
     }
     delete [] new_table;
 }

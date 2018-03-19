@@ -54,7 +54,7 @@ void HashTable::add(Hash h, int i){
 
 int HashTable::addRecord(Hash h) {
     int hash = hash1(h.class_number, h.lesson_number);
-    if (searchRecord(h)) {
+    if (searchRecord(h) == -1) {
         if (hash_table[hash].status == 0) {
             add(h, hash);
         } else if (hash_table[hash].status == 1) {
@@ -94,7 +94,7 @@ void HashTable::resizeTable() {
     delete [] new_table;
 }
 
-bool HashTable::compare(Hash h, int i) {
+int HashTable::compare(Hash h, int i) {
     if (hash_table[i].class_number == h.class_number
         and hash_table[i].lesson_number == h.lesson_number
         and hash_table[i].FIO == h.FIO
@@ -108,7 +108,7 @@ int HashTable::searchRecord(Hash h) {
     int deep = 0;
     int hash = hash1(h.class_number, h.lesson_number);
     while (deep <= SIZE and hash_table[hash].status != 0){
-        if (compare(h, hash)) return 0;
+        if (compare(h, hash)) return hash;
         else hash = hash2(hash);
         deep++;
     }
@@ -116,12 +116,19 @@ int HashTable::searchRecord(Hash h) {
 }
 
 int HashTable::deleteRecord(Hash h) {
-    int hash = hash1(h.class_number, h.lesson_number);
-    while (hash_table[hash].status == 1) {
-        if (compare(h, hash)) {
-            hash_table[hash].status = 2;
-            count--;
-        } else hash = hash2(hash);
-    }
+//    int hash = hash1(h.class_number, h.lesson_number);
+//    while (hash_table[hash].status == 1) {
+//        if (compare(h, hash)) {
+//            hash_table[hash].status = 2;
+//            count--;
+//            return 0;
+//        } else hash = hash2(hash);
+//    }
+//    return 1;
+    int hash = searchRecord(h);
+    if (hash != -1) {
+        hash_table[hash].status = 2;
+        count--;
+        return 0;
+    } else return 1;
 }
-

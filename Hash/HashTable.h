@@ -30,9 +30,8 @@ private:
     int hash1 (string, string);
     int hash2 (int);
     void add(Hash, int);
-    bool compare(Hash, int);
+    int compare(Hash, int);
     void resizeTable();
-
 };
 
 

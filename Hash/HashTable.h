@@ -34,5 +34,4 @@ private:
     void resizeTable();
 };
 
-
 #endif //HASH_HASHTABLE_H

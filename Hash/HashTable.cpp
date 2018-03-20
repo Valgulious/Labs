@@ -116,15 +116,6 @@ int HashTable::searchRecord(Hash h) {
 }
 
 int HashTable::deleteRecord(Hash h) {
-//    int hash = hash1(h.class_number, h.lesson_number);
-//    while (hash_table[hash].status == 1) {
-//        if (compare(h, hash)) {
-//            hash_table[hash].status = 2;
-//            count--;
-//            return 0;
-//        } else hash = hash2(hash);
-//    }
-//    return 1;
     int hash = searchRecord(h);
     if (hash != -1) {
         hash_table[hash].status = 2;

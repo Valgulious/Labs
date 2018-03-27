@@ -59,7 +59,7 @@ int HashTable::addRecord(Hash h) {
         } else if (hash_table[hash].status == 1) {
             while (hash_table[hash].status == 1) {
                 if (hash_table[hash].class_number == h.class_number
-                        and hash_table[hash].lesson_number == h.lesson_number) return -1;
+                        and hash_table[hash].lesson_number == h.lesson_number) return -2;
                 else hash = hash2(hash);
             }
             add(h, hash);

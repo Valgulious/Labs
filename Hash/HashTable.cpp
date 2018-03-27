@@ -32,14 +32,13 @@ void HashTable::print() {
 
 int HashTable::hash1(string class_number, string lesson_number) {
     string s = class_number + lesson_number;
-    int a = int(s[0])+int(s[1])+int(s[2])+int(s[3])+int(s[4]);
-    return a%SIZE;
+    int a = (int(s[0])+int(s[1])+int(s[2])+int(s[3])+int(s[4]))%SIZE;
+    return a;
 }
 
 int HashTable::hash2 (int i) {
-    int a = i+(SIZE-1);
-    if (a >= SIZE) return a-SIZE;
-    else return a;
+    int a = (i+(SIZE-1))%SIZE;
+    return a;
 }
 
 void HashTable::add(Hash h, int i){

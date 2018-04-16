@@ -12,8 +12,8 @@ int main() {
     Queue<int> q1;
 //    q1.print();
 //    q1.printAll();
-////    q1.popElement();
-////    q1.popElement();
+//    q1.popElement();
+//    q1.popElement();
     q2.printAll();
     for (int i = 1; i <= 7; i++) q2.pushElement(i);
     q2.printAll();

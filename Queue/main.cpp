@@ -5,11 +5,21 @@ using namespace std;
 
 int main() {
     Queue<int> q(5);
+    Queue<int> q2;
     for (int i = 1; i <= 5; i++) q.pushElement(i);
     q.print();
     q.printAll();
-    Queue<int> q1(q);
-    q1.print();
+    Queue<int> q1;
+//    q1.print();
+//    q1.printAll();
+////    q1.popElement();
+////    q1.popElement();
+    q2.printAll();
+    for (int i = 1; i <= 7; i++) q2.pushElement(i);
+    q2.printAll();
+    q1 = q2 = q;
+    q2.printAll();
+    q.printAll();
     q1.printAll();
 //    q.popElement();
 //    q.pushElement(9);

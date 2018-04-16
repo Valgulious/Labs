@@ -1,12 +1,21 @@
-#ifndef QUEUE_QUEUEIMP_H
-#define QUEUE_QUEUEIMP_H
 #include "Queue.h"
+using namespace std;
 
 template <class T>
 Queue<T>::Queue(int n)
 {
     SIZE = n;
     array = new T[n];
+}
+
+template <class T>
+Queue<T>::Queue(const Queue & q)
+{
+    this->SIZE = q.SIZE;
+    this->array = new T[SIZE];
+    this->head = q.head;
+    this->tail = q.tail;
+    for (int i = 0; i < SIZE; i++) this->array[i] = q.array[i];
 }
 
 template <class T>
@@ -18,7 +27,7 @@ Queue<T>::~Queue()
 template <class T>
 int Queue<T>::print()
 {
-    if (!length()) {
+    if (length()) {
         if (tail >= head) {
             for (int i = head; i <= tail; i++) cout << array[i];
         }
@@ -35,7 +44,7 @@ template <class T>
 void Queue<T>::printAll()
 {
     for (int i = 0; i < SIZE; i++) cout << array[i];
-    cout << endl;
+    cout << endl << "H = " << head << " T = " << tail << endl;
 }
 
 template <typename T>
@@ -52,7 +61,7 @@ int Queue<T>::pushElement(T element)
 template <typename T>
 T Queue<T>::popElement()
 {
-    if (!length()) {
+    if (length()) {
         int i = head;
         if (tail == head) {
             tail = -1;
@@ -62,7 +71,7 @@ T Queue<T>::popElement()
             if (head == SIZE) head = 0;
         }
         return array[i];
-    } else return 1; // Подумать над тем, что будет возвращать если очередь пуста
+    } else return 0; // Подумать над тем, что будет возвращать если очередь пуста
 }
 
 template <class T>
@@ -75,5 +84,16 @@ int Queue<T>::length()
     } else return SIZE - head + tail + 1;
 }
 
-
-#endif //QUEUE_QUEUEIMP_H
+template <class T>
+Queue<T>& Queue<T>::operator = (Queue &q)
+{
+    Queue<T> other(q);
+    int emptySize = this->SIZE - this->length();
+    int qSize = other.length();
+    if (qSize >= emptySize) {
+        for (int i = 0; i < emptySize; i++) this->pushElement(other.popElement());
+    } else {
+        for (int i = 0; i < qSize; i++) this->pushElement(other.popElement());
+    }
+    return *this;
+}

@@ -3,5 +3,5 @@ project(Queue)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main.cpp Queue.h)
+set(SOURCE_FILES main.cpp Queue.h QueueImp.h)
 add_executable(Queue ${SOURCE_FILES})

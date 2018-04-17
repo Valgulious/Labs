@@ -29,11 +29,11 @@ int Queue<T>::print()
 {
     if (length()) {
         if (tail >= head) {
-            for (int i = head; i <= tail; i++) cout << array[i];
+            for (int i = head; i <= tail; i++) cout << array[i]<<" ";
         }
         else {
-            for (int i = head; i < SIZE; i++) cout << array[i];
-            for (int i = 0; i <= tail; i++) cout << array[i];
+            for (int i = head; i < SIZE; i++) cout << array[i]<<" ";
+            for (int i = 0; i <= tail; i++) cout << array[i]<<" ";
         }
         cout << endl;
         return 0;
@@ -71,7 +71,7 @@ T Queue<T>::popElement()
             if (head == SIZE) head = 0;
         }
         return array[i];
-    } else return 0; // Подумать над тем, что будет возвращать если очередь пуста
+    } else throw "Queue is empty"; // Подумать над тем, что будет возвращать если очередь пуста
 }
 
 template <class T>

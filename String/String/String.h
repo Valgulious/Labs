@@ -4,18 +4,37 @@
 
 using namespace std;
 
+struct List
+{
+    int firstSymbol, lastSymbol;
+    char* symbols;
+    List* next, *prev;
+};
+
 class String
 {
 public:
-    struct List
-    {
-        int firstSymbol, lastSymbol;
-        char* symbols[5];
-        List* next, pref;
-    };
-    String();
-    String(char*);
+    String(unsigned int size = 5);
+    String(unsigned int size = 5, char* symbols);
+    int length();
 
+    /** Функции
+     * Длина
+     * Конкотенация (+)
+     * Присваивание (=)
+     * Конструктор копирование
+     * Печать (<<)
+     * Копирование
+     * Поиск
+     * Удаление
+     * Сравнение (==)
+     */
+
+    List* list;
+private:
+    List * primaryInitialization (unsigned int);
+    void addToEnd (unsigned int, List**);
+    unsigned int SIZE;
 };
 
 

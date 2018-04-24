@@ -88,12 +88,13 @@ template <class T>
 Queue<T>& Queue<T>::operator = (Queue &q)
 {
     Queue<T> other(q);
-    int emptySize = this->SIZE - this->length();
-    int qSize = other.length();
-    if (qSize >= emptySize) {
-        for (int i = 0; i < emptySize; i++) this->pushElement(other.popElement());
+    //int emptySize = this->SIZE - this->length();
+    int newQueueSize = other.length();
+    this->head = 0; this->tail = -1;
+    if (newQueueSize >= this->SIZE) {
+        for (int i = 0; i < this->SIZE; i++) this->pushElement(other.popElement());
     } else {
-        for (int i = 0; i < qSize; i++) this->pushElement(other.popElement());
+        for (int i = 0; i < newQueueSize; i++) this->pushElement(other.popElement());
     }
     return *this;
 }

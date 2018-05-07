@@ -6,7 +6,7 @@ using namespace std;
 
 struct List
 {
-    int firstSymbol, lastSymbol;
+    int firstSymbol = 0, lastSymbol = -1;
     char* symbols;
     List* next, *prev;
 };
@@ -14,8 +14,8 @@ struct List
 class String
 {
 public:
-    String(unsigned int size = 5);
-    String(unsigned int size = 5, char* symbols);
+    String(int size);
+    String(int size, char const * symbols);
     int length();
 
     /** Функции
@@ -32,9 +32,10 @@ public:
 
     List* list;
 private:
-    List * primaryInitialization (unsigned int);
-    void addToEnd (unsigned int, List**);
-    unsigned int SIZE;
+    List * primaryInitialization (int);
+    void addNewNode();
+    void writeStringInList(char const *);
+    int SIZE;
 };
 
 

@@ -1,44 +1,58 @@
 #include <cstring>
 #include "String.h"
 
-String::String(unsigned int size)
+String::String(int size)
 {
     SIZE = size;
     list = primaryInitialization(SIZE);
 }
 
-String::String(unsigned int size, char* symbols)
+String::String(int size, char const *  symbols)
 {
     SIZE = size;
     list = primaryInitialization(SIZE);
-    for (int i = 0; i < SIZE; i++) {
-        list -> symbols[i] = symbols[i];
-    }
+    writeStringInList(symbols);
 }
 
-List* String::primaryInitialization(unsigned int size)
+List* String::primaryInitialization(int size)
 {
     List *pV = new List;
     pV -> symbols = new char[size];
-    pV -> firstSymbol = -1;
-    pV -> lastSymbol = -1;
     pV -> next = nullptr;
     pV -> prev = nullptr;
     return pV;
 }
 
-void String::addToEnd(unsigned int size, List **pBegin)
+void String::addNewNode()
 {
-
-    List *pV = new List;
-    pV -> symbols = new char[size];
-
-    List *pv = *pBegin;
+    List *pv = list;
     while (pv -> next != nullptr)
     {
         pv = pv -> next;
     }
-    pv -> next = pV;
-    pV -> next = nullptr;
-    pV -> prev = pv;
+    pv -> next = primaryInitialization(SIZE);
+    pv -> next -> symbols = new char[SIZE];
+    pv -> next -> prev = pv;
+}
+
+void String::writeStringInList(char const * symbols)
+{
+    int i = 0, j = 0;
+    //char* symbolsCut = new char[SIZE];
+    List * pv = list;
+
+    while (pv -> next) pv = pv -> next;
+
+    while (i < strlen(symbols)) {
+        j = 0;
+        if ((pv -> lastSymbol + 1) == SIZE) {
+            addNewNode();
+            pv = pv -> next;
+        }
+        while ((i < strlen(symbols)) and (pv -> lastSymbol < SIZE) and (j < SIZE)) {
+            pv -> lastSymbol++;
+            pv -> symbols[pv -> lastSymbol] = symbols[i];
+            i++; j++;
+        }
+    }
 }

@@ -8,17 +8,21 @@ int main() {
 //    cout << strlen(c) << endl;
 //    cout << sizeof(a)/sizeof(int) << endl;
 
-    String s(5, "string");
+    String s("Hellow World!!!", 7);
+    String s1("string", 10);
+    String s2 ("strinn", 5);
 
-    for (int i = 0; i < 5; i++) {
-        cout << s.list -> symbols[i];
-    }
-    for (int i = 0; i < 5; i++) {
-        cout << s.list -> next -> symbols[i];
-    }
-    cout << endl;
-    cout << s.list -> lastSymbol << endl;
-    cout << s.list -> next -> lastSymbol << endl;
+    cout << s << endl;
+    cout << s.length() << endl;
+
+    s = s + s1;
+
+    cout << "s = " << s << endl;
+    String s3 (s);
+    cout << "s3 = " << s3 << endl;
+    cout << s + s1 << endl;
+
+    if (s1 == s2) cout << "Yes" << endl;
 
     return 0;
 }

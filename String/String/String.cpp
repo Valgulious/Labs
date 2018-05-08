@@ -7,11 +7,25 @@ String::String(int size)
     list = primaryInitialization(SIZE);
 }
 
-String::String(int size, char const *  symbols)
+String::String( char const *  symbols, int size)
 {
     SIZE = size;
     list = primaryInitialization(SIZE);
     writeStringInList(symbols);
+}
+
+String::String(const String & string)
+{
+    this -> SIZE = string.SIZE;
+    this -> list = primaryInitialization(this -> SIZE);
+
+    List * pv = string.list;
+
+    while (pv) {
+        this->writeStringInList(pv -> symbols);
+        pv = pv -> next;
+    }
+
 }
 
 List* String::primaryInitialization(int size)
@@ -45,7 +59,7 @@ void String::writeStringInList(char const * symbols)
 
     while (i < strlen(symbols)) {
         j = 0;
-        if ((pv -> lastSymbol + 1) == SIZE) {
+        if ((pv -> lastSymbol + 1) >= SIZE) {
             addNewNode();
             pv = pv -> next;
         }
@@ -55,4 +69,36 @@ void String::writeStringInList(char const * symbols)
             i++; j++;
         }
     }
+}
+
+String String::operator = (String string)
+{
+    List * pv = this->list;
+
+    while (pv) {
+        pv -> firstSymbol = 0;
+        pv -> lastSymbol = -1;
+        pv = pv -> next;
+    }
+
+    pv = string.list;
+
+    while (pv) {
+        this->writeStringInList(pv->symbols);
+        pv = pv -> next;
+    }
+
+    return *this;
+}
+
+int String::length()
+{
+    List * pv = this -> list;
+    int lengthOfString = 0;
+
+    while (pv) {
+        lengthOfString = lengthOfString + pv -> lastSymbol - pv -> firstSymbol + 1;
+        pv = pv -> next;
+    }
+    return lengthOfString;
 }

@@ -73,20 +73,23 @@ void String::writeStringInList(char const * symbols)
 
 String& String::operator = (String string)
 {
-    List * pv = this->list;
+//    List * pv = this->list;
+//
+//    while (pv) {
+//        pv -> firstSymbol = 0;
+//        pv -> lastSymbol = -1;
+//        pv = pv -> next;
+//    }
+//
+//    pv = string.list;
+//
+//    while (pv) {
+//        this->writeStringInList(pv->symbols);
+//        pv = pv -> next;
+//    }
 
-    while (pv) {
-        pv -> firstSymbol = 0;
-        pv -> lastSymbol = -1;
-        pv = pv -> next;
-    }
-
-    pv = string.list;
-
-    while (pv) {
-        this->writeStringInList(pv->symbols);
-        pv = pv -> next;
-    }
+    String string1(string);
+    this->list = string1.list;
 
     return *this;
 }
@@ -161,4 +164,35 @@ int String::length()
         pv = pv -> next;
     }
     return lengthOfString;
+}
+
+int String::findSub(const char * p, const char * s)
+{
+    for (int i = 0; s[i]; ++i) {
+        for (int j = 0; ; ++j) {
+            if (!p[j]) return i;
+            if (s[i+j] != p[j]) break;
+        }
+    }
+    return -1;
+}
+
+int String::find(char * substring)
+{
+    auto * string = new char[this->length()];
+    int i = -1, j = 0;
+    List * pv = list;
+
+    while (pv) {
+        if (i == -1) i = pv->firstSymbol;
+        string[j] = pv->symbols[i];
+        j++; i++;
+        if (i > pv->lastSymbol) {
+            pv = pv->next;
+            i = -1;
+        }
+    }
+
+    return findSub(substring,string);
+
 }

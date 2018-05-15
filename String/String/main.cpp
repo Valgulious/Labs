@@ -14,15 +14,18 @@ int main() {
 
     cout << s << endl;
     cout << s.length() << endl;
-
+    cout << s + s1 << endl;
     s = s + s1;
 
+    cout << "s1 = " << s1 << endl;
     cout << "s = " << s << endl;
+    cout << s.length() << endl;
     String s3 (s);
     cout << "s3 = " << s3 << endl;
     cout << s + s1 << endl;
 
     if (s1 == s2) cout << "Yes" << endl;
 
+    cout << s3.find("string") << endl;
     return 0;
 }

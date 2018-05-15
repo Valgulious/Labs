@@ -7,8 +7,8 @@ using namespace std;
 struct List
 {
     int firstSymbol = 0, lastSymbol = -1;
-    char* symbols;
-    List* next, *prev;
+    char * symbols;
+    List * next, * prev;
 };
 
 class String

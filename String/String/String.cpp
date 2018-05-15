@@ -52,7 +52,6 @@ void String::addNewNode()
 void String::writeStringInList(char const * symbols)
 {
     int i = 0, j = 0;
-    //char* symbolsCut = new char[SIZE];
     List * pv = list;
 
     while (pv -> next) pv = pv -> next;
@@ -73,21 +72,6 @@ void String::writeStringInList(char const * symbols)
 
 String& String::operator = (String string)
 {
-//    List * pv = this->list;
-//
-//    while (pv) {
-//        pv -> firstSymbol = 0;
-//        pv -> lastSymbol = -1;
-//        pv = pv -> next;
-//    }
-//
-//    pv = string.list;
-//
-//    while (pv) {
-//        this->writeStringInList(pv->symbols);
-//        pv = pv -> next;
-//    }
-
     String string1(string);
     this->list = string1.list;
 

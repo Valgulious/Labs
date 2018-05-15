@@ -26,6 +26,8 @@ int main() {
 
     if (s1 == s2) cout << "Yes" << endl;
 
-    cout << s3.find("string") << endl;
+    cout << "s3 = " << s3 << endl;
+    cout << "s1 = " << s1 << endl;
+    cout << s3.find(s1) << endl;
     return 0;
 }

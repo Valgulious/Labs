@@ -177,11 +177,12 @@ int String::findSub(const char * p, const char * s)
     return -1;
 }
 
-int String::find(char * substring)
+int String::find(String subStr)
 {
     auto * string = new char[this->length()];
+    auto * subString = new char[subStr.length()];
     int i = -1, j = 0;
-    List * pv = list;
+    List * pv = this->list;
 
     while (pv) {
         if (i == -1) i = pv->firstSymbol;
@@ -193,6 +194,39 @@ int String::find(char * substring)
         }
     }
 
-    return findSub(substring,string);
+    j = 0;
+    i = -1;
+    pv = subStr.list;
+    while (pv) {
+        if (i == -1) i = pv->firstSymbol;
+        subString[j] = pv->symbols[i];
+        j++; i++;
+        if (i > pv->lastSymbol) {
+            pv = pv->next;
+            i = -1;
+        }
+    }
+
+    return findSub(subString,string);
 
 }
+
+//int String::deleteSubStr(String subStr)
+//{
+//
+//    int k = find(subStr);
+//    size_t len;
+//    List * pv = this->list;
+//    int j = pv->firstSymbol;
+//    while (k != -1) {
+//        for (int i = 0; i < k; i++) {
+//            j++;
+//            if (j > pv->lastSymbol) {
+//                pv = pv->next;
+//                j = pv->firstSymbol;
+//            }
+//        }
+//        len = k + strlen(subStr) - 1;
+//        k = find(subStr);
+//    }
+//}

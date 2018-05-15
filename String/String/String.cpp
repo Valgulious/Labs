@@ -130,7 +130,7 @@ ostream& operator << (ostream& s, String string)
     List * pv = string.list;
 
     while (pv) {
-        for (int i = pv ->firstSymbol; i <= pv -> lastSymbol; i++) {
+        for (int i = pv -> firstSymbol; i <= pv -> lastSymbol; i++) {
             s << pv -> symbols[i];
         }
         pv = pv -> next;
@@ -166,14 +166,14 @@ int String::find(String subStr)
     auto * string = new char[this->length()];
     auto * subString = new char[subStr.length()];
     int i = -1, j = 0;
-    List * pv = this->list;
+    List * pv = this -> list;
 
     while (pv) {
-        if (i == -1) i = pv->firstSymbol;
-        string[j] = pv->symbols[i];
+        if (i == -1) i = pv -> firstSymbol;
+        string[j] = pv -> symbols[i];
         j++; i++;
-        if (i > pv->lastSymbol) {
-            pv = pv->next;
+        if (i > pv -> lastSymbol) {
+            pv = pv -> next;
             i = -1;
         }
     }
@@ -182,17 +182,44 @@ int String::find(String subStr)
     i = -1;
     pv = subStr.list;
     while (pv) {
-        if (i == -1) i = pv->firstSymbol;
-        subString[j] = pv->symbols[i];
+        if (i == -1) i = pv -> firstSymbol;
+        subString[j] = pv -> symbols[i];
         j++; i++;
-        if (i > pv->lastSymbol) {
-            pv = pv->next;
+        if (i > pv -> lastSymbol) {
+            pv = pv -> next;
             i = -1;
         }
     }
 
     return findSub(subString,string);
 
+}
+
+int String::deleteSubStr(String subStr)
+{
+    int k = find(subStr);
+    List * pv = this->list;
+    int j = pv -> firstSymbol;
+
+    while (k != -1) {
+        for (int i = 0; i < k; i++) {
+            j++;
+            if (j > pv -> lastSymbol) {
+                pv = pv -> next;
+                j = pv -> firstSymbol;
+            }
+        }
+
+        if (subStr.length() >= pv -> lastSymbol - j + 1)
+            pv->lastSymbol = j - 1;
+
+        if (pv -> lastSymbol == -1) {
+            pv -> prev -> next = pv -> next;
+            pv -> next -> prev = pv -> prev;
+        }
+
+        k = find(subStr);
+    }
 }
 
 //int String::deleteSubStr(String subStr)

@@ -150,7 +150,7 @@ int String::length()
     return lengthOfString;
 }
 
-int String::findSub(const char * p, const char * s)
+int String::findSubStr(const char *p, const char *s)
 {
     for (int i = 0; s[i]; ++i) {
         for (int j = 0; ; ++j) {
@@ -168,41 +168,45 @@ int String::find(String subStr)
     int i = -1, j = 0;
     List * pv = this -> list;
 
-    while (pv) {
-        if (i == -1) i = pv -> firstSymbol;
-        string[j] = pv -> symbols[i];
-        j++; i++;
-        if (i > pv -> lastSymbol) {
-            pv = pv -> next;
-            i = -1;
+    if (subStr.length() <= this -> length()) {
+        while (pv) {
+            if (i == -1) i = pv -> firstSymbol;
+            string[j] = pv -> symbols[i];
+            j++; i++;
+            if (i > pv -> lastSymbol) {
+                pv = pv -> next;
+                i = -1;
+            }
         }
-    }
 
-    j = 0;
-    i = -1;
-    pv = subStr.list;
-    while (pv) {
-        if (i == -1) i = pv -> firstSymbol;
-        subString[j] = pv -> symbols[i];
-        j++; i++;
-        if (i > pv -> lastSymbol) {
-            pv = pv -> next;
-            i = -1;
+        j = 0;
+        i = -1;
+        pv = subStr.list;
+        while (pv) {
+            if (i == -1) i = pv -> firstSymbol;
+            subString[j] = pv -> symbols[i];
+            j++; i++;
+            if (i > pv -> lastSymbol) {
+                pv = pv -> next;
+                i = -1;
+            }
         }
-    }
 
-    return findSub(subString,string);
+        return findSubStr(subString, string);
+    } else {
+        return -2;
+    }
 
 }
 
 int String::deleteSubStr(String subStr)
 {
     int k = find(subStr);
-    List * pv = this->list;
-    int j = pv -> firstSymbol;
+    List * pv = this -> list;
 
-    while (k != -1) {
-        for (int i = 0; i < k; i++) {
+    if (k >= 0) {
+        int j = pv -> firstSymbol;
+        for (int i = 0; i <= k; i++) {
             j++;
             if (j > pv -> lastSymbol) {
                 pv = pv -> next;
@@ -210,17 +214,44 @@ int String::deleteSubStr(String subStr)
             }
         }
 
-        if (subStr.length() >= pv -> lastSymbol - j + 1)
-            pv->lastSymbol = j - 1;
+        if ((pv -> lastSymbol - j + 1) == subStr.length()) {
+            if (j - 1 == -1) {
+                pv -> prev -> next = pv -> next;
+                pv -> next -> prev = pv -> prev;
+                delete pv;
+                return 0;
+            } else pv -> lastSymbol = j - 1;
 
-        if (pv -> lastSymbol == -1) {
-            pv -> prev -> next = pv -> next;
-            pv -> next -> prev = pv -> prev;
         }
-
-        k = find(subStr);
-    }
+    } else return k;
 }
+
+//int String::deleteSubStr(String subStr)
+//{
+//    int k = find(subStr);
+//    List * pv = this->list;
+//    int j = pv -> firstSymbol;
+//
+//    while (k != -1) {
+//        for (int i = 0; i < k; i++) {
+//            j++;
+//            if (j > pv -> lastSymbol) {
+//                pv = pv -> next;
+//                j = pv -> firstSymbol;
+//            }
+//        }
+//
+//        if (subStr.length() >= pv -> lastSymbol - j + 1)
+//            pv->lastSymbol = j - 1;
+//
+//        if (pv -> lastSymbol == -1) {
+//            pv -> prev -> next = pv -> next;
+//            pv -> next -> prev = pv -> prev;
+//        }
+//
+//        k = find(subStr);
+//    }
+//}
 
 //int String::deleteSubStr(String subStr)
 //{

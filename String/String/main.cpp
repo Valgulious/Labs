@@ -9,7 +9,7 @@ int main() {
 
     String s("Hellow World!!!", 7);
     String s1("string", 10);
-    String s2 ("strinn", 5);
+    String s2 ("stringa", 5);
 
     cout << s << endl;
     cout << s.length() << endl;
@@ -26,7 +26,7 @@ int main() {
     if (s1 == s2) cout << "Yes" << endl;
 
     cout << "s3 = " << s3 << endl;
-    cout << "s1 = " << s1 << endl;
-    cout << s3.find(s1) << endl;
+    cout << "s2 = " << s2 << endl;
+    cout << s3.find(s2) << endl;
     return 0;
 }

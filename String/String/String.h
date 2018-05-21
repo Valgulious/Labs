@@ -43,7 +43,7 @@ private:
     void addNewNode();
     void writeStringInList(char const *);
     int SIZE;
-    int findSub(const char *, const char *);
+    int findSubStr(const char *, const char *);
 };
 
 

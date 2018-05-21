@@ -1,6 +1,7 @@
 #ifndef STRING_STRING_H
 #define STRING_STRING_H
 #include <iostream>
+#include "StringIter.h"
 
 using namespace std;
 
@@ -24,6 +25,8 @@ public:
     friend const bool operator == (String & string1, String & string2);
     friend String operator + (const String & string1, const String & string2);
     friend ostream& operator << (ostream& s, String string);
+
+    friend class StringIter;
 
     /** Функции
      * Длина - done

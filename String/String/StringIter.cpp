@@ -1,26 +1,22 @@
 #include "StringIter.h"
 
-StringIter::StringIter(const String * string)
-{
-    str = string;
-    iterList = str -> list;
-}
-
-void StringIter::first()
-{
+StringIter::StringIter(const String *){
     while (iterList -> prev) {
         iterList = iterList -> prev;
     }
     index = iterList -> firstSymbol;
 }
 
-void StringIter::next()
+int StringIter::next()
 {
     index++;
     if (index > iterList -> lastSymbol) {
         if (iterList -> next) {
             iterList = iterList -> next;
             index = iterList -> firstSymbol;
+        } else {
+            index--;
+            return -1;
         }
     }
 }
@@ -32,4 +28,9 @@ void StringIter::goToIndex(int ind)
     for (int i = 0; i < ind; i++) {
         this -> next();
     }
+}
+
+char StringIter::curentItem()
+{
+    return iterList -> symbols[index];
 }

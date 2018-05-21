@@ -10,8 +10,9 @@ class StringIter {
 public:
     StringIter(const String *);
     void first();
-    void next();
+    int next();
     void goToIndex(int);
+    char curentItem();
 };
 
 

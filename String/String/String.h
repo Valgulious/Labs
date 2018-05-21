@@ -19,8 +19,8 @@ public:
     String(char const * symbols, int size = 10);
     String(const String &);
     int length();
-    int find(String);
-    int deleteSubStr(String);
+    int find(String *);
+    int deleteSubStr(String *);
     String& operator = (String );
     friend const bool operator == (String & string1, String & string2);
     friend String operator + (const String & string1, const String & string2);

@@ -161,45 +161,62 @@ int String::findSubStr(const char *p, const char *s)
     return -1;
 }
 
-int String::find(String subStr)
+int String::find(String * subStr)
 {
     auto * string = new char[this->length()];
-    auto * subString = new char[subStr.length()];
+    auto * subString = new char[subStr -> length()];
     int i = -1, j = 0;
     List * pv = this -> list;
+    StringIter iterStr(this);
+    StringIter iterSubStr(subStr);
 
-    if (subStr.length() <= this -> length()) {
-        while (pv) {
-            if (i == -1) i = pv -> firstSymbol;
-            string[j] = pv -> symbols[i];
-            j++; i++;
-            if (i > pv -> lastSymbol) {
-                pv = pv -> next;
-                i = -1;
+    if (subStr -> length() <= this -> length()) {
+        for (int i = 0; i < this -> length(); i++) {
+            for (int j = 0; ; j++) {
+                if (iterSubStr.next() == -1) return i;
+                if (iterStr.curentItem() == iterSubStr.curentItem()) {
+                    iterStr.next();
+                    iterStr.next();
+                } else {
+                    iterSubStr.first();
+                    break;
+                }
             }
         }
+    } else return -2;
 
-        j = 0;
-        i = -1;
-        pv = subStr.list;
-        while (pv) {
-            if (i == -1) i = pv -> firstSymbol;
-            subString[j] = pv -> symbols[i];
-            j++; i++;
-            if (i > pv -> lastSymbol) {
-                pv = pv -> next;
-                i = -1;
-            }
-        }
-
-        return findSubStr(subString, string);
-    } else {
-        return -2;
-    }
+//    if (subStr.length() <= this -> length()) {
+//        while (pv) {
+//            if (i == -1) i = pv -> firstSymbol;
+//            string[j] = pv -> symbols[i];
+//            j++; i++;
+//            if (i > pv -> lastSymbol) {
+//                pv = pv -> next;
+//                i = -1;
+//            }
+//        }
+//
+//        j = 0;
+//        i = -1;
+//        pv = subStr.list;
+//        while (pv) {
+//            if (i == -1) i = pv -> firstSymbol;
+//            subString[j] = pv -> symbols[i];
+//            j++; i++;
+//            if (i > pv -> lastSymbol) {
+//                pv = pv -> next;
+//                i = -1;
+//            }
+//        }
+//
+//        return findSubStr(subString, string);
+//    } else {
+//        return -2;
+//    }
 
 }
 
-int String::deleteSubStr(String subStr)
+int String::deleteSubStr(String * subStr)
 {
     int k = find(subStr);
     List * pv = this -> list;
@@ -214,7 +231,7 @@ int String::deleteSubStr(String subStr)
             }
         }
 
-        if ((pv -> lastSymbol - j + 1) == subStr.length()) {
+        if ((pv -> lastSymbol - j + 1) == subStr ->length()) {
             if (j - 1 == -1) {
                 pv -> prev -> next = pv -> next;
                 pv -> next -> prev = pv -> prev;

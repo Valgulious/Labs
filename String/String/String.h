@@ -22,7 +22,7 @@ public:
     int find(String);
     String subStr(int, int);
     int deleteSubStr(int, int);
-    int repalce(String, String);
+    int replace(String, String);
     String& operator = (String );
     friend const bool operator == (String & string1, String & string2);
     friend String operator + (const String & string1, const String & string2);

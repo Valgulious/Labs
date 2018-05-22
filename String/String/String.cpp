@@ -150,23 +150,8 @@ int String::length()
     return lengthOfString;
 }
 
-//int String::findSubStr(const char *p, const char *s)
-//{
-//    for (int i = 0; s[i]; ++i) {
-//        for (int j = 0; ; ++j) {
-//            if (!p[j]) return i;
-//            if (s[i+j] != p[j]) break;
-//        }
-//    }
-//    return -1;
-//}
-
 int String::find(String subStr)
 {
-//    auto * string = new char[this->length()];
-//    auto * subString = new char[subStr -> length()];
-//    int i = -1, j = 0;
-//    List * pv = this -> list;
 
     if (subStr.length() <= this -> length()) {
         StringIter iterStr(this);
@@ -186,35 +171,6 @@ int String::find(String subStr)
         }
         return -1;
     } else return -2;
-
-//    if (subStr.length() <= this -> length()) {
-//        while (pv) {
-//            if (i == -1) i = pv -> firstSymbol;
-//            string[j] = pv -> symbols[i];
-//            j++; i++;
-//            if (i > pv -> lastSymbol) {
-//                pv = pv -> next;
-//                i = -1;
-//            }
-//        }
-//
-//        j = 0;
-//        i = -1;
-//        pv = subStr.list;
-//        while (pv) {
-//            if (i == -1) i = pv -> firstSymbol;
-//            subString[j] = pv -> symbols[i];
-//            j++; i++;
-//            if (i > pv -> lastSymbol) {
-//                pv = pv -> next;
-//                i = -1;
-//            }
-//        }
-//
-//        return findSubStr(subString, string);
-//    } else {
-//        return -2;
-//    }
 
 }
 
@@ -252,66 +208,25 @@ int String::deleteSubStr(int first, int last)
     } else return -2;
 }
 
-int String::repalce(String subString1, String subString2)
+int String::replace(String subString1, String subString2)
 {
     if (this -> find(subString1) >= 0) {
         while (this -> find(subString1) >= 0) {
-            StringIter stringIter(this);
-
-            stringIter.goToIndex(this -> find(subString1));
-            String string1(this -> subStr(0, stringIter.getIndex() - 1));
-            String string2(this -> subStr(stringIter.getIndex() + subString1.length(), this -> length() - 1));
-            String string(string1 + subString2 + string2);
+            String string3("",5);
+            String string;
+            while ((this -> find(subString2) <= this -> find(subString1)) or
+                    (this -> find(subString2) >= 0)) {
+                string3 = string3 + this -> subStr(0, this -> find(subString2) - 1);
+                string3 = string3 + this -> subStr(this -> find(subString2),
+                                                   this -> find(subString2) + subString2.length() - 1);
+                this -> deleteSubStr(this -> find(string3), this -> find(string3) + string3.length() - 1);
+            }
+            String string1(this -> subStr(0, this -> find(subString1) - 1));
+            String string2(this -> subStr(this -> find(subString1) + subString1.length(),
+                                          this -> length() - 1));
 
             this -> list = string.list;
         }
     } else return this -> find(subString1);
 
 }
-
-//int String::deleteSubStr(String subStr)
-//{
-//    int k = find(subStr);
-//    List * pv = this->list;
-//    int j = pv -> firstSymbol;
-//
-//    while (k != -1) {
-//        for (int i = 0; i < k; i++) {
-//            j++;
-//            if (j > pv -> lastSymbol) {
-//                pv = pv -> next;
-//                j = pv -> firstSymbol;
-//            }
-//        }
-//
-//        if (subStr.length() >= pv -> lastSymbol - j + 1)
-//            pv->lastSymbol = j - 1;
-//
-//        if (pv -> lastSymbol == -1) {
-//            pv -> prev -> next = pv -> next;
-//            pv -> next -> prev = pv -> prev;
-//        }
-//
-//        k = find(subStr);
-//    }
-//}
-
-//int String::deleteSubStr(String subStr)
-//{
-//
-//    int k = find(subStr);
-//    size_t len;
-//    List * pv = this->list;
-//    int j = pv->firstSymbol;
-//    while (k != -1) {
-//        for (int i = 0; i < k; i++) {
-//            j++;
-//            if (j > pv->lastSymbol) {
-//                pv = pv->next;
-//                j = pv->firstSymbol;
-//            }
-//        }
-//        len = k + strlen(subStr) - 1;
-//        k = find(subStr);
-//    }
-//}

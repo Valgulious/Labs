@@ -150,32 +150,31 @@ int String::length()
     return lengthOfString;
 }
 
-int String::findSubStr(const char *p, const char *s)
-{
-    for (int i = 0; s[i]; ++i) {
-        for (int j = 0; ; ++j) {
-            if (!p[j]) return i;
-            if (s[i+j] != p[j]) break;
-        }
-    }
-    return -1;
-}
+//int String::findSubStr(const char *p, const char *s)
+//{
+//    for (int i = 0; s[i]; ++i) {
+//        for (int j = 0; ; ++j) {
+//            if (!p[j]) return i;
+//            if (s[i+j] != p[j]) break;
+//        }
+//    }
+//    return -1;
+//}
 
-int String::find(String * subStr)
+int String::find(String subStr)
 {
 //    auto * string = new char[this->length()];
 //    auto * subString = new char[subStr -> length()];
 //    int i = -1, j = 0;
 //    List * pv = this -> list;
-    StringIter iterStr(this);
-    StringIter iterSubStr(subStr);
 
-    if (subStr -> length() <= this -> length()) {
+    if (subStr.length() <= this -> length()) {
+        StringIter iterStr(this);
+        StringIter iterSubStr(&subStr);
         for (int i = 0; i < this -> length(); i++) {
             for (int j = 0; ; j++) {
                 if (iterSubStr.getIndex() == -1) return i;
-                cout << iterStr.curentItem() << ' ' << iterSubStr.curentItem() << endl;
-                if (iterStr.curentItem() == iterSubStr.curentItem()) {
+                if (iterStr.currentItem() == iterSubStr.currentItem()) {
                     iterStr.next();
                     iterSubStr.next();
                 } else {
@@ -219,31 +218,55 @@ int String::find(String * subStr)
 
 }
 
-int String::deleteSubStr(String * subStr)
+String String::subStr(int first, int last)
 {
-    int k = find(subStr);
-    List * pv = this -> list;
+    String subString("",this -> SIZE);
+    if ((last - first + 1) <= this -> length()) {
+        if ((first <= this -> length() - 1) or (last <= this -> length() - 1)) {
+            StringIter stringIter(this);
 
-    if (k >= 0) {
-        int j = pv -> firstSymbol;
-        for (int i = 0; i <= k; i++) {
-            j++;
-            if (j > pv -> lastSymbol) {
-                pv = pv -> next;
-                j = pv -> firstSymbol;
+            stringIter.goToIndex(first);
+            for (int i = 0; i < last - first +1; i++) {
+                auto * c = new char[1];
+                c[0] = stringIter.currentItem();
+                subString.writeStringInList(c);
+                stringIter.next();
+                delete [] c;
             }
-        }
+            return subString;
+        } else return subString;
+    } else return subString;
+}
 
-        if ((pv -> lastSymbol - j + 1) == subStr ->length()) {
-            if (j - 1 == -1) {
-                pv -> prev -> next = pv -> next;
-                pv -> next -> prev = pv -> prev;
-                delete pv;
-                return 0;
-            } else pv -> lastSymbol = j - 1;
+int String::deleteSubStr(int first, int last)
+{
+    if ((last - first + 1) <= this -> length()) {
+        if (last <= this -> length()) {
+            String string1(this -> subStr(0, first - 1));
+            String string2(this -> subStr(last + 1, this -> length() - 1));
+            String string3(string1 + string2);
 
+            this -> list = string3.list;
+            return 0;
+        } else return -1;
+    } else return -2;
+}
+
+int String::repalce(String subString1, String subString2)
+{
+    if (this -> find(subString1) >= 0) {
+        while (this -> find(subString1) >= 0) {
+            StringIter stringIter(this);
+
+            stringIter.goToIndex(this -> find(subString1));
+            String string1(this -> subStr(0, stringIter.getIndex() - 1));
+            String string2(this -> subStr(stringIter.getIndex() + subString1.length(), this -> length() - 1));
+            String string(string1 + subString2 + string2);
+
+            this -> list = string.list;
         }
-    } else return k;
+    } else return this -> find(subString1);
+
 }
 
 //int String::deleteSubStr(String subStr)

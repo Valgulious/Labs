@@ -19,8 +19,10 @@ public:
     String(char const * symbols, int size = 10);
     String(const String &);
     int length();
-    int find(String *);
-    int deleteSubStr(String *);
+    int find(String);
+    String subStr(int, int);
+    int deleteSubStr(int, int);
+    int repalce(String, String);
     String& operator = (String );
     friend const bool operator == (String & string1, String & string2);
     friend String operator + (const String & string1, const String & string2);
@@ -46,28 +48,35 @@ private:
     void addNewNode();
     void writeStringInList(char const *);
     int SIZE;
-    int findSubStr(const char *, const char *);
+//    int findSubStr(const char *, const char *);
 };
 
 class StringIter {
     const List * iterList;
-    const String * str;
+    String * str;
     int index;
 
 public:
-    StringIter(const String * string)
+    StringIter(String * string)
     {
         str = string;
         iterList = str -> list;
         index = iterList -> firstSymbol;
     }
-    void first()
+
+    void resetIter(String * string)
     {
-        while (iterList -> prev) {
-            iterList = iterList -> prev;
-        }
+        str = string;
+        iterList = str -> list;
         index = iterList -> firstSymbol;
     }
+
+    void first()
+    {
+        iterList = str -> list;
+        index = iterList -> firstSymbol;
+    }
+
     void next()
     {
         index++;
@@ -78,15 +87,21 @@ public:
             } else {
                 index = -1;
             }
-        }}
-    void goToIndex(int ind)
+        }
+    }
+
+    int goToIndex(int ind)
     {
-        iterList = str -> list;
-        index = iterList -> firstSymbol;
-        for (int i = 0; i < ind; i++) {
-            this -> next();
-        }}
-    char curentItem()
+        if (ind <= str -> length()) {
+            this -> first();
+            for (int i = 0; i < ind; i++) {
+                this -> next();
+            }
+            return 0;
+        } else return -2;
+    }
+
+    char currentItem()
     {
         return iterList -> symbols[index];
     }

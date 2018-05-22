@@ -163,26 +163,29 @@ int String::findSubStr(const char *p, const char *s)
 
 int String::find(String * subStr)
 {
-    auto * string = new char[this->length()];
-    auto * subString = new char[subStr -> length()];
-    int i = -1, j = 0;
-    List * pv = this -> list;
+//    auto * string = new char[this->length()];
+//    auto * subString = new char[subStr -> length()];
+//    int i = -1, j = 0;
+//    List * pv = this -> list;
     StringIter iterStr(this);
     StringIter iterSubStr(subStr);
 
     if (subStr -> length() <= this -> length()) {
         for (int i = 0; i < this -> length(); i++) {
             for (int j = 0; ; j++) {
-                if (iterSubStr.next() == -1) return i;
+                if (iterSubStr.getIndex() == -1) return i;
+                cout << iterStr.curentItem() << ' ' << iterSubStr.curentItem() << endl;
                 if (iterStr.curentItem() == iterSubStr.curentItem()) {
                     iterStr.next();
-                    iterStr.next();
+                    iterSubStr.next();
                 } else {
                     iterSubStr.first();
+                    iterStr.next();
                     break;
                 }
             }
         }
+        return -1;
     } else return -2;
 
 //    if (subStr.length() <= this -> length()) {

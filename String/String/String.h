@@ -1,7 +1,7 @@
 #ifndef STRING_STRING_H
 #define STRING_STRING_H
 #include <iostream>
-#include "StringIter.h"
+//#include "StringIter.h"
 
 using namespace std;
 
@@ -47,6 +47,54 @@ private:
     void writeStringInList(char const *);
     int SIZE;
     int findSubStr(const char *, const char *);
+};
+
+class StringIter {
+    const List * iterList;
+    const String * str;
+    int index;
+
+public:
+    StringIter(const String * string)
+    {
+        str = string;
+        iterList = str -> list;
+        index = iterList -> firstSymbol;
+    }
+    void first()
+    {
+        while (iterList -> prev) {
+            iterList = iterList -> prev;
+        }
+        index = iterList -> firstSymbol;
+    }
+    void next()
+    {
+        index++;
+        if (index > iterList -> lastSymbol) {
+            if (iterList -> next) {
+                iterList = iterList -> next;
+                index = iterList -> firstSymbol;
+            } else {
+                index = -1;
+            }
+        }}
+    void goToIndex(int ind)
+    {
+        iterList = str -> list;
+        index = iterList -> firstSymbol;
+        for (int i = 0; i < ind; i++) {
+            this -> next();
+        }}
+    char curentItem()
+    {
+        return iterList -> symbols[index];
+    }
+
+    int getIndex()
+    {
+        return index;
+    }
 };
 
 

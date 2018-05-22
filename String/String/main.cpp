@@ -20,6 +20,10 @@ int main() {
     cout << "s = " << s << endl;
     cout << s.length() << endl;
     String s3 (s);
+    String s4("a", 5);
+
+    StringIter stringIter(&s3);
+    s3 = s3 + s4;
     cout << "s3 = " << s3 << endl;
     cout << s + s1 << endl;
 
@@ -27,6 +31,14 @@ int main() {
 
     cout << "s3 = " << s3 << endl;
     cout << "s2 = " << s2 << endl;
-    cout << s3.find(s2) << endl;
+    cout << s2.find(&s3) << endl;
+
+    for (int i = 0; i < s3.length(); i++) {
+        cout << stringIter.curentItem();
+        stringIter.next();
+    }
+    cout << endl;
+
+    cout << s3.length() << endl;
     return 0;
 }

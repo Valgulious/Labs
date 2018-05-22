@@ -1,6 +1,6 @@
 #ifndef STRING_STRINGITER_H
 #define STRING_STRINGITER_H
-#include "String.h"
+//#include "String.h"
 
 class StringIter {
     const List * iterList;

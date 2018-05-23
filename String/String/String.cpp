@@ -211,22 +211,21 @@ int String::deleteSubStr(int first, int last)
 int String::replace(String subString1, String subString2)
 {
     if (this -> find(subString1) >= 0) {
+        String thisAfterReplace("", this -> SIZE);
         while (this -> find(subString1) >= 0) {
-            String string3("",5);
-            String string;
-            while ((this -> find(subString2) <= this -> find(subString1)) or
-                    (this -> find(subString2) >= 0)) {
-                string3 = string3 + this -> subStr(0, this -> find(subString2) - 1);
-                string3 = string3 + this -> subStr(this -> find(subString2),
-                                                   this -> find(subString2) + subString2.length() - 1);
-                this -> deleteSubStr(this -> find(string3), this -> find(string3) + string3.length() - 1);
-            }
-            String string1(this -> subStr(0, this -> find(subString1) - 1));
-            String string2(this -> subStr(this -> find(subString1) + subString1.length(),
-                                          this -> length() - 1));
+            StringIter stringIter(this);
 
-            this -> list = string.list;
+            stringIter.goToIndex(this -> find(subString1));
+            String string1(this -> subStr(0, this -> find(subString1) - 1));
+
+            thisAfterReplace = thisAfterReplace + string1 + subString2;
+            this -> deleteSubStr(0, this -> find(subString1) + subString1.length() - 1);
+//            String string2(this -> subStr(this -> find(subString1) + subString1.length(),
+//                                          this -> length() - 1));
+
         }
+        thisAfterReplace = thisAfterReplace + this -> subStr(0, this -> length() - 1);
+        this -> list = thisAfterReplace.list;
     } else return this -> find(subString1);
 
 }

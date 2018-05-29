@@ -52,7 +52,6 @@ void String::addNewNode()
 void String::writeStringInList(char const * symbols)
 {
     int i = 0, j = 0;
-    //char* symbolsCut = new char[SIZE];
     List * pv = list;
 
     while (pv -> next) pv = pv -> next;
@@ -73,20 +72,8 @@ void String::writeStringInList(char const * symbols)
 
 String& String::operator = (String string)
 {
-    List * pv = this->list;
-
-    while (pv) {
-        pv -> firstSymbol = 0;
-        pv -> lastSymbol = -1;
-        pv = pv -> next;
-    }
-
-    pv = string.list;
-
-    while (pv) {
-        this->writeStringInList(pv->symbols);
-        pv = pv -> next;
-    }
+    String string1(string);
+    this->list = string1.list;
 
     return *this;
 }
@@ -143,7 +130,7 @@ ostream& operator << (ostream& s, String string)
     List * pv = string.list;
 
     while (pv) {
-        for (int i = pv ->firstSymbol; i <= pv -> lastSymbol; i++) {
+        for (int i = pv -> firstSymbol; i <= pv -> lastSymbol; i++) {
             s << pv -> symbols[i];
         }
         pv = pv -> next;
@@ -161,4 +148,84 @@ int String::length()
         pv = pv -> next;
     }
     return lengthOfString;
+}
+
+int String::find(String subStr)
+{
+
+    if (subStr.length() <= this -> length()) {
+        StringIter iterStr(this);
+        StringIter iterSubStr(&subStr);
+        for (int i = 0; i < this -> length(); i++) {
+            for (int j = 0; ; j++) {
+                if (iterSubStr.getIndex() == -1) return i;
+                if (iterStr.currentItem() == iterSubStr.currentItem()) {
+                    iterStr.next();
+                    iterSubStr.next();
+                } else {
+                    iterSubStr.first();
+                    iterStr.next();
+                    break;
+                }
+            }
+        }
+        return -1;
+    } else return -2;
+
+}
+
+String String::subStr(int first, int last)
+{
+    String subString("",this -> SIZE);
+    if ((last - first + 1) <= this -> length()) {
+        if ((first <= this -> length() - 1) or (last <= this -> length() - 1)) {
+            StringIter stringIter(this);
+
+            stringIter.goToIndex(first);
+            for (int i = 0; i < last - first +1; i++) {
+                auto * c = new char[1];
+                c[0] = stringIter.currentItem();
+                subString.writeStringInList(c);
+                stringIter.next();
+                delete [] c;
+            }
+            return subString;
+        } else return subString;
+    } else return subString;
+}
+
+int String::deleteSubStr(int first, int last)
+{
+    if ((last - first + 1) <= this -> length()) {
+        if (last <= this -> length()) {
+            String string1(this -> subStr(0, first - 1));
+            String string2(this -> subStr(last + 1, this -> length() - 1));
+            String string3(string1 + string2);
+
+            this -> list = string3.list;
+            return 0;
+        } else return -1;
+    } else return -2;
+}
+
+int String::replace(String subString1, String subString2)
+{
+    if (this -> find(subString1) >= 0) {
+        String thisAfterReplace("", this -> SIZE);
+        while (this -> find(subString1) >= 0) {
+            StringIter stringIter(this);
+
+            stringIter.goToIndex(this -> find(subString1));
+            String string1(this -> subStr(0, this -> find(subString1) - 1));
+
+            thisAfterReplace = thisAfterReplace + string1 + subString2;
+            this -> deleteSubStr(0, this -> find(subString1) + subString1.length() - 1);
+//            String string2(this -> subStr(this -> find(subString1) + subString1.length(),
+//                                          this -> length() - 1));
+
+        }
+        thisAfterReplace = thisAfterReplace + this -> subStr(0, this -> length() - 1);
+        this -> list = thisAfterReplace.list;
+    } else return this -> find(subString1);
+
 }

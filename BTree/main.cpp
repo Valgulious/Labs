@@ -1,26 +1,15 @@
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
 int const T = 2; // Степень B-дерева
 
 struct BNode {
-
-    int keys[2*T-1]; // Ключи узла
+    bool isLeaf = true;
+    vector<int> keys; // Ключи узла
     BNode * parent = nullptr; // Родитель
-    BNode * childs[2*T]; // Потомки
-public:
-    int search(int element) {
-        for (int i = 0; i < 2*T - 1; i++) if (this->keys[i] == -1) return i;
-        return -1;
-
-    }
-
-    int searchChild(int element) {
-        int i = 0;
-        while ((i < 2*T - 1) and (element <= this->keys[i])) i++;
-        return i;
-    }
+    vector<BNode*> children;// Потомки
 };
 
 /*Функция создания B-дерева
@@ -53,8 +42,22 @@ bool isRoot(BNode node);
 
 int main() {
     BNode BTree;
-    addElement(BTree, 5);
-    cout << BTree.keys[0];
+
+    vector<int> a;
+    vector<int>::iterator iter;
+
+    a.push_back(5);
+    a.push_back(6);
+    iter = a.begin();
+    iter++;
+    a.insert(iter, 7);
+    iter = a.begin();
+    a.erase(iter);
+//    a.erase(iter);
+    for (int i = 0; i < a.size(); i++) {
+        cout << a[i] << endl;
+    }
+    cout << a[6] << endl;
 //    if (isRoot(BTree)) cout << "yes";
     return 0;
 }
@@ -64,12 +67,34 @@ bool isRoot(BNode node) {
     return false;
 }
 
+BNode restructuring(BNode node) {
+    BNode leftNode, rightNode;
+    vector<int>::iterator iter = node.keys.begin();
+    for (int i = 0; i < 2*T-1; i++) {
+        if (i < T-1) {
+            leftNode.keys.push_back(node.keys[0]);
+            node.keys.erase(iter);
+        } else if (i > T-1) {
+            rightNode.keys.push_back(node.keys[0]);
+            node.keys.erase(iter);
+        } else {
+            iter++;
+        }
+    }
+    if (node.parent) {
+        addElement(*node.parent, node.keys[0]);
+    } else {
+        leftNode.parent = &node;
+        rightNode.parent = &node;
+        node.children[0] = &leftNode;
+        node.children[1] = &rightNode;
+    }
+}
+
 int addElement(BNode root, int element) {
-    for (int i = 0; i < 2*T; i++) {
-        int search = root.search(element);
-        if (search != -1) root.keys[search] = element;
-        else {
-            BNode node = *root.childs[root.searchChild(element)];
-            addElement(node, element);
-        }}
+    if (root.isLeaf) {
+        if (root.keys.size() == 2*T-1) {
+
+        }
+    }
 }

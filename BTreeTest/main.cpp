@@ -1,20 +1,20 @@
 #include <iostream>
 //#include "BTree.h"
 
+int const DEGREE = 2;
+
 using namespace std;
 
 struct BTreeNode {
     int *keys;
-    int degree;
     BTreeNode **children;
     int n;
     bool leaf;
     BTreeNode(int _degree, bool _leaf) {
-        this->degree = _degree;
         this->leaf = _leaf;
 
-        this->keys = new int[(2*this->degree)-1];
-        this->children = new BTreeNode *[2*degree];
+        this->keys = new int[(2*DEGREE)-1];
+        this->children = new BTreeNode *[2*DEGREE];
 
         n = 0;
     }
@@ -22,10 +22,6 @@ struct BTreeNode {
 
 struct BTree {
     BTreeNode *root;
-    int degree;
-    BTree(int _degree) {
-        this->degree = _degree;
-    }
 };
 
 void traverse(BTreeNode *_BTreeNode);
@@ -50,11 +46,15 @@ void remove(BTree *_BTree, int _key);
 
 int main() {
 
-    BTree *t = new BTree(3);
+    BTree *t = new BTree;
 
     insert(t, 1);
     insert(t,3);
-    remove(t,1);
+    insert(t,5);
+    insert(t,2);
+    insert(t,3);
+    insert(t,8);
+    remove(t,19);
     traverse(t);
 
     return 0;
@@ -80,13 +80,13 @@ void remove(BTreeNode *_BTreeNode, int _key)
     }
     else {
         if (_BTreeNode->leaf) {
-            cout << "The key" << _key << " is does not exist in the tree\n";
+            cout << "The key " << _key << " is does not exist in the tree\n";
             return;
         }
 
         bool flag = ((idx==_BTreeNode->n)? true : false);
 
-        if (_BTreeNode->children[idx]->n < _BTreeNode->degree)
+        if (_BTreeNode->children[idx]->n < DEGREE)
             fill(_BTreeNode, idx);
 
         if (flag && idx > _BTreeNode->n)
@@ -108,13 +108,13 @@ void removeFromNoLeaf(BTreeNode *_BTreeNode, int _idx)
 {
     int k = _BTreeNode->keys[_idx];
 
-    if (_BTreeNode->children[_idx]->n >= _BTreeNode->degree) {
+    if (_BTreeNode->children[_idx]->n >= DEGREE) {
         int pred = getPred(_BTreeNode, _idx);
         _BTreeNode->keys[_idx] = pred;
         remove(_BTreeNode->children[_idx], pred);
     }
 
-    else if  (_BTreeNode->children[_idx+1]->n >= _BTreeNode->degree) {
+    else if  (_BTreeNode->children[_idx+1]->n >= DEGREE) {
         int succ = getSucc(_BTreeNode, _idx);
         _BTreeNode->keys[_idx] = succ;
         remove(_BTreeNode->children[_idx-1], succ);
@@ -145,10 +145,10 @@ int getSucc(BTreeNode *_BTreeNode, int _idx)
 
 void fill(BTreeNode *_BTreeNode, int _idx)
 {
-    if (_idx!=0 && _BTreeNode->children[_idx-1]->n >= _BTreeNode->degree)
+    if (_idx!=0 && _BTreeNode->children[_idx-1]->n >= DEGREE)
         borrowFromPrev(_BTreeNode, _idx);
 
-    else if (_idx!=_BTreeNode->n && _BTreeNode->children[_idx+1]->n >= _BTreeNode->degree)
+    else if (_idx!=_BTreeNode->n && _BTreeNode->children[_idx+1]->n >= DEGREE)
         borrowFromNext(_BTreeNode, _idx);
 
     else {
@@ -212,15 +212,14 @@ void merge(BTreeNode *_BTreeNode, int _idx)
     BTreeNode *child = _BTreeNode->children[_idx];
     BTreeNode *sibling = _BTreeNode->children[_idx+1];
 
-    child->keys[_BTreeNode->degree-1] = _BTreeNode->keys[_idx];
+    child->keys[DEGREE-1] = _BTreeNode->keys[_idx];
 
     for (int i = 0; i < sibling->n; ++i)
-        child->keys[i+_BTreeNode->degree] = sibling->keys[i];
+        child->keys[i+DEGREE] = sibling->keys[i];
 
-    if (!child->leaf)
-    {
+    if (!child->leaf) {
         for(int i = 0; i <= sibling->n; ++i)
-            child->children[i+_BTreeNode->degree] = sibling->children[i];
+            child->children[i+DEGREE] = sibling->children[i];
     }
 
     for (int i = _idx+1; i < _BTreeNode->n; ++i)
@@ -239,10 +238,8 @@ void insertNonFull(BTreeNode *_BTreeNode, int _key)
 {
     int i = _BTreeNode->n-1;
 
-    if (_BTreeNode->leaf == true)
-    {
-        while (i >= 0 && _BTreeNode->keys[i] > _key)
-        {
+    if (_BTreeNode->leaf == true) {
+        while (i >= 0 && _BTreeNode->keys[i] > _key) {
             _BTreeNode->keys[i+1] = _BTreeNode->keys[i];
             i--;
         }
@@ -250,13 +247,11 @@ void insertNonFull(BTreeNode *_BTreeNode, int _key)
         _BTreeNode->keys[i+1] = _key;
         _BTreeNode->n = _BTreeNode->n+1;
     }
-    else
-    {
+    else {
         while (i >= 0 && _BTreeNode->keys[i] > _key)
             i--;;
 
-        if (_BTreeNode->children[i+1]->n == 2*_BTreeNode->degree-1)
-        {
+        if (_BTreeNode->children[i+1]->n == 2*DEGREE-1) {
             splitChild(_BTreeNode, i+1, _BTreeNode->children[i+1]);
 
             if (_BTreeNode->keys[i+1] < _key)
@@ -268,19 +263,18 @@ void insertNonFull(BTreeNode *_BTreeNode, int _key)
 
 void splitChild(BTreeNode *_BTreeNode, int idx, BTreeNode *child)
 {
-    BTreeNode *z = new BTreeNode(child->degree, child->leaf);
-    z->n = _BTreeNode->degree - 1;
+    BTreeNode *z = new BTreeNode(DEGREE, child->leaf);
+    z->n = DEGREE - 1;
 
-    for (int j = 0; j < _BTreeNode->degree-1; j++)
-        z->keys[j] = child->keys[j+_BTreeNode->degree];
+    for (int j = 0; j < DEGREE-1; j++)
+        z->keys[j] = child->keys[j+DEGREE];
 
-    if (child->leaf == false)
-    {
-        for (int j = 0; j < _BTreeNode->degree; j++)
-            z->children[j] = child->children[j+_BTreeNode->degree];
+    if (child->leaf == false) {
+        for (int j = 0; j < DEGREE; j++)
+            z->children[j] = child->children[j+DEGREE];
     }
 
-    child->n = _BTreeNode->degree - 1;
+    child->n = DEGREE - 1;
 
     for (int j = _BTreeNode->n; j >= idx+1; j--)
         _BTreeNode->children[j+1] = _BTreeNode->children[j];
@@ -290,7 +284,7 @@ void splitChild(BTreeNode *_BTreeNode, int idx, BTreeNode *child)
     for (int j = _BTreeNode->n-1; j >= idx; j--)
         _BTreeNode->keys[j+1] = _BTreeNode->keys[j];
 
-    _BTreeNode->keys[idx] = child->keys[_BTreeNode->degree-1];
+    _BTreeNode->keys[idx] = child->keys[DEGREE-1];
 
     _BTreeNode->n = _BTreeNode->n + 1;
 }
@@ -325,17 +319,14 @@ BTreeNode *search(BTreeNode *_BTreeNode, int _key)
 
 void insert(BTree *_BTree, int _key)
 {
-    if (_BTree->root == NULL)
-    {
-        _BTree->root = new BTreeNode(_BTree->degree, true);
+    if (_BTree->root == NULL) {
+        _BTree->root = new BTreeNode(DEGREE, true);
         _BTree->root->keys[0] = _key;
         _BTree->root->n = 1;
     }
-    else
-    {
-        if (_BTree->root->n == 2*_BTree->degree-1)
-        {
-            BTreeNode *s = new BTreeNode(_BTree->degree, false);
+    else {
+        if (_BTree->root->n == 2*DEGREE-1) {
+            BTreeNode *s = new BTreeNode(DEGREE, false);
 
             s->children[0] = _BTree->root;
 
@@ -355,16 +346,14 @@ void insert(BTree *_BTree, int _key)
 
 void remove(BTree *_BTree, int _key)
 {
-    if (!_BTree->root)
-    {
+    if (!_BTree->root) {
         cout << "The tree is empty\n";
         return;
     }
 
     remove(_BTree->root, _key);
 
-    if (_BTree->root->n == 0)
-    {
+    if (_BTree->root->n == 0) {
         BTreeNode *tmp = _BTree->root;
         if (_BTree->root->leaf)
             _BTree->root = NULL;

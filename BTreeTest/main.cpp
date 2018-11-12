@@ -51,13 +51,14 @@ int main() {
 
     BTree t;
 
+    cout << remove(&t,15) << endl;
     for (int i = 0; i < 10; i++) {
         insert(&t, i);
 //        printBTree(&t);
 //        cout << endl;
     }
     printBTree(&t);
-    cout << remove(&t,6) << endl;
+    cout << remove(&t,15) << endl;
     cout << endl;
     printBTree(&t);
     cout << search(&t, 3) << endl;
@@ -341,7 +342,7 @@ int remove(BTree *_BTree, int _key)
         return 2;
     }
 
-    remove(_BTree->root, _key);
+    int r = remove(_BTree->root, _key);
 
     if (_BTree->root->n == 0) {
         BTreeNode *tmp = _BTree->root;
@@ -352,6 +353,7 @@ int remove(BTree *_BTree, int _key)
 
         delete tmp;
     }
+    return r;
 }
 
 int search(BTree *_BTree, int _key)

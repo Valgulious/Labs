@@ -1,7 +1,7 @@
 #include <iostream>
-//#include "BTree.h"
 
 int const DEGREE = 2;
+int const STEP = 4;
 
 using namespace std;
 
@@ -22,16 +22,19 @@ struct BTreeNode {
 
 struct BTree {
     BTreeNode *root;
+    BTree() {
+        root = nullptr;
+    }
 };
 
-void traverse(BTreeNode *_BTreeNode);
-BTreeNode* search(BTreeNode *_BTreeNode, int _key);
+int printBTreeNode(BTreeNode *_BTreeNode);
+int search(BTreeNode *_BTreeNode, int _key);
 int findKey(BTreeNode *_BTreeNode, int _key);
 void insertNonFull(BTreeNode *_BTreeNode, int _key);
 void splitChild(BTreeNode *_BTreeNode, int idx, BTreeNode *child);
-void remove(BTreeNode *_BTreeNode, int _key);
-void removeFromLeaf(BTreeNode *_BTreeNode, int _idx);
-void removeFromNoLeaf(BTreeNode *_BTreeNode, int _idx);
+int remove(BTreeNode *_BTreeNode, int _key);
+int removeFromLeaf(BTreeNode *_BTreeNode, int _idx);
+int removeFromNoLeaf(BTreeNode *_BTreeNode, int _idx);
 int getPred(BTreeNode *_BTreeNode, int _idx);
 int getSucc(BTreeNode *_BTreeNode, int _idx);
 void fill(BTreeNode *_BTreeNode, int _idx);
@@ -39,25 +42,25 @@ void borrowFromPrev(BTreeNode *_BTreeNode, int _idx);
 void borrowFromNext(BTreeNode *_BTreeNode, int _idx);
 void merge(BTreeNode *_BTreeNode, int _idx);
 
-void traverse(BTree *_BTree);
-BTreeNode* search(BTree *_BTree, int _key);
+void printBTree(BTree *_BTree);
+int search(BTree *_BTree, int _key);
 void insert(BTree *_BTree, int _key);
-void remove(BTree *_BTree, int _key);
+int remove(BTree *_BTree, int _key);
 
 int main() {
 
-    BTree *t = new BTree;
+    BTree t;
 
-    insert(t, 1);
-    insert(t,3);
-    insert(t,5);
-    insert(t,2);
-    insert(t,3);
-    insert(t,8);
-    remove(t,19);
-    traverse(t);
-
-    return 0;
+    for (int i = 0; i < 10; i++) {
+        insert(&t, i);
+//        printBTree(&t);
+//        cout << endl;
+    }
+    printBTree(&t);
+    cout << remove(&t,6) << endl;
+    cout << endl;
+    printBTree(&t);
+    cout << search(&t, 3) << endl;
 }
 
 int findKey(BTreeNode *_BTreeNode, int _key)
@@ -68,60 +71,60 @@ int findKey(BTreeNode *_BTreeNode, int _key)
     return idx;
 }
 
-void remove(BTreeNode *_BTreeNode, int _key)
+int remove(BTreeNode *_BTreeNode, int _key)
 {
     int idx = findKey(_BTreeNode, _key);
 
     if (idx < _BTreeNode->n && _BTreeNode->keys[idx] == _key) {
         if (_BTreeNode->leaf)
-            removeFromLeaf(_BTreeNode, idx);
+            return removeFromLeaf(_BTreeNode, idx);
         else
-            removeFromNoLeaf(_BTreeNode, idx);
+            return removeFromNoLeaf(_BTreeNode, idx);
     }
     else {
         if (_BTreeNode->leaf) {
             cout << "The key " << _key << " is does not exist in the tree\n";
-            return;
+            return 1;
         }
 
-        bool flag = ((idx==_BTreeNode->n)? true : false);
+        bool flag = (idx==_BTreeNode->n);
 
         if (_BTreeNode->children[idx]->n < DEGREE)
             fill(_BTreeNode, idx);
 
         if (flag && idx > _BTreeNode->n)
-            remove(_BTreeNode->children[idx-1], _key);
+            return remove(_BTreeNode->children[idx-1], _key);
         else
-            remove(_BTreeNode->children[idx], _key);
+            return remove(_BTreeNode->children[idx], _key);
     }
 }
 
-void removeFromLeaf(BTreeNode *_BTreeNode, int _idx)
+int removeFromLeaf(BTreeNode *_BTreeNode, int _idx)
 {
     for (int i=_idx+1; i < _BTreeNode->n; ++i)
         _BTreeNode->keys[i-1] = _BTreeNode->keys[i];
     _BTreeNode->n--;
-
+    return 0;
 }
 
-void removeFromNoLeaf(BTreeNode *_BTreeNode, int _idx)
+int removeFromNoLeaf(BTreeNode *_BTreeNode, int _idx)
 {
     int k = _BTreeNode->keys[_idx];
 
     if (_BTreeNode->children[_idx]->n >= DEGREE) {
         int pred = getPred(_BTreeNode, _idx);
         _BTreeNode->keys[_idx] = pred;
-        remove(_BTreeNode->children[_idx], pred);
+        return remove(_BTreeNode->children[_idx], pred);
     }
 
     else if  (_BTreeNode->children[_idx+1]->n >= DEGREE) {
         int succ = getSucc(_BTreeNode, _idx);
         _BTreeNode->keys[_idx] = succ;
-        remove(_BTreeNode->children[_idx-1], succ);
+        return remove(_BTreeNode->children[_idx-1], succ);
     }
     else {
         merge(_BTreeNode, _idx);
-        remove(_BTreeNode->children[_idx], k);
+        return remove(_BTreeNode->children[_idx], k);
     }
 }
 
@@ -238,7 +241,7 @@ void insertNonFull(BTreeNode *_BTreeNode, int _key)
 {
     int i = _BTreeNode->n-1;
 
-    if (_BTreeNode->leaf == true) {
+    if (_BTreeNode->leaf) {
         while (i >= 0 && _BTreeNode->keys[i] > _key) {
             _BTreeNode->keys[i+1] = _BTreeNode->keys[i];
             i--;
@@ -249,7 +252,7 @@ void insertNonFull(BTreeNode *_BTreeNode, int _key)
     }
     else {
         while (i >= 0 && _BTreeNode->keys[i] > _key)
-            i--;;
+            i--;
 
         if (_BTreeNode->children[i+1]->n == 2*DEGREE-1) {
             splitChild(_BTreeNode, i+1, _BTreeNode->children[i+1]);
@@ -263,13 +266,13 @@ void insertNonFull(BTreeNode *_BTreeNode, int _key)
 
 void splitChild(BTreeNode *_BTreeNode, int idx, BTreeNode *child)
 {
-    BTreeNode *z = new BTreeNode(DEGREE, child->leaf);
+    auto *z = new BTreeNode(DEGREE, child->leaf);
     z->n = DEGREE - 1;
 
     for (int j = 0; j < DEGREE-1; j++)
         z->keys[j] = child->keys[j+DEGREE];
 
-    if (child->leaf == false) {
+    if (!child->leaf) {
         for (int j = 0; j < DEGREE; j++)
             z->children[j] = child->children[j+DEGREE];
     }
@@ -289,44 +292,31 @@ void splitChild(BTreeNode *_BTreeNode, int idx, BTreeNode *child)
     _BTreeNode->n = _BTreeNode->n + 1;
 }
 
-void traverse(BTreeNode *_BTreeNode)
-{
-    int i;
-    for (i = 0; i < _BTreeNode->n; i++) {
-        if (_BTreeNode->leaf == false)
-            traverse(_BTreeNode->children[i]);
-        cout << " " << _BTreeNode->keys[i];
-    }
-
-    if (_BTreeNode->leaf == false)
-        traverse(_BTreeNode->children[i]);
-}
-
-BTreeNode *search(BTreeNode *_BTreeNode, int _key)
+int search(BTreeNode *_BTreeNode, int _key)
 {
     int i = 0;
     while (i < _BTreeNode->n && _key > _BTreeNode->keys[i])
         i++;
 
     if (_BTreeNode->keys[i] == _key)
-        return _BTreeNode;
+        return 1;
 
-    if (_BTreeNode->leaf == true)
-        return nullptr;
+    if (_BTreeNode->leaf)
+        return 0;
 
     return search(_BTreeNode->children[i], _key);
 }
 
 void insert(BTree *_BTree, int _key)
 {
-    if (_BTree->root == NULL) {
+    if (_BTree->root == nullptr) {
         _BTree->root = new BTreeNode(DEGREE, true);
         _BTree->root->keys[0] = _key;
         _BTree->root->n = 1;
     }
     else {
         if (_BTree->root->n == 2*DEGREE-1) {
-            BTreeNode *s = new BTreeNode(DEGREE, false);
+            auto *s = new BTreeNode(DEGREE, false);
 
             s->children[0] = _BTree->root;
 
@@ -344,11 +334,11 @@ void insert(BTree *_BTree, int _key)
     }
 }
 
-void remove(BTree *_BTree, int _key)
+int remove(BTree *_BTree, int _key)
 {
     if (!_BTree->root) {
         cout << "The tree is empty\n";
-        return;
+        return 2;
     }
 
     remove(_BTree->root, _key);
@@ -356,7 +346,7 @@ void remove(BTree *_BTree, int _key)
     if (_BTree->root->n == 0) {
         BTreeNode *tmp = _BTree->root;
         if (_BTree->root->leaf)
-            _BTree->root = NULL;
+            _BTree->root = nullptr;
         else
             _BTree->root = _BTree->root->children[0];
 
@@ -364,13 +354,31 @@ void remove(BTree *_BTree, int _key)
     }
 }
 
-BTreeNode* search(BTree *_BTree, int _key)
+int search(BTree *_BTree, int _key)
 {
-    return (_BTree->root == NULL)? NULL : search(_BTree->root, _key);
+    return (_BTree->root == nullptr)? 0 : search(_BTree->root, _key);
 }
 
-void traverse(BTree *_BTree)
+void printBTree(BTree *_BTree)
 {
-    if (_BTree->root != NULL) traverse(_BTree->root);
+    if (_BTree->root != nullptr) printBTreeNode(_BTree->root);
+}
+
+int printBTreeNode(BTreeNode *_BTreeNode)
+{
+    int h = 0;
+    int i;
+    for (i = 0; i < _BTreeNode->n; i++) {
+        if (!_BTreeNode->leaf)
+            h = printBTreeNode(_BTreeNode->children[i]);
+        for (int j = 0; j < h; j++) cout << " ";
+        cout << " " << _BTreeNode->keys[i] << endl;
+    }
+
+    if (!_BTreeNode->leaf) {
+        printBTreeNode(_BTreeNode->children[i]);
+        cout << endl;
+    }
+    return h+STEP;
 }
 

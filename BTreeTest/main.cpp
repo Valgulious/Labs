@@ -51,17 +51,31 @@ int main() {
 
     BTree t;
 
-    cout << remove(&t,15) << endl;
-    for (int i = 0; i < 10; i++) {
-        insert(&t, i);
-//        printBTree(&t);
-//        cout << endl;
+    insert(&t, 20);
+    insert(&t, 5);
+    insert(&t, 8);
+    insert(&t, 71);
+    insert(&t, 13);
+    insert(&t, 4);
+    insert(&t, 28);
+    insert(&t, 13);
+    insert(&t, 7);
+    insert(&t, 81);
+    insert(&t, 1);
+    insert(&t, 5);
+    insert(&t, 13);
+    insert(&t, 28);
+    for (int i=1;i<30;i++)
+        if (search(&t,i)==0)  insert(&t, i);
+    printBTree(&t);
+
+    for (int i=1;i<30;i++) {
+        if (search(&t, i) == 1)
+            remove(&t, i);
+        cout<<"DEL"<<"   "<<i<<"   "<<endl;
+        printBTree(&t);
     }
-    printBTree(&t);
-    cout << remove(&t,15) << endl;
-    cout << endl;
-    printBTree(&t);
-    cout << search(&t, 3) << endl;
+
 }
 
 int findKey(BTreeNode *_BTreeNode, int _key)
@@ -121,7 +135,7 @@ int removeFromNoLeaf(BTreeNode *_BTreeNode, int _idx)
     else if  (_BTreeNode->children[_idx+1]->n >= DEGREE) {
         int succ = getSucc(_BTreeNode, _idx);
         _BTreeNode->keys[_idx] = succ;
-        return remove(_BTreeNode->children[_idx-1], succ);
+        return remove(_BTreeNode->children[_idx+1], succ);
     }
     else {
         merge(_BTreeNode, _idx);

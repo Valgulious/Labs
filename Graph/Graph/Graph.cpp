@@ -1,7 +1,7 @@
 #include "Graph.h"
 
 int Graph::addArc(int _startVertex, int _endVertex) {
-    GraphNode* node = searchVertexInNodes(_startVertex);
+    GraphNode* node = searchStartVertexInNodes(_startVertex);
     auto insertNode = new GraphNode;
     insertNode->startVertex = _startVertex;
     insertNode->endVertex = _endVertex;
@@ -47,6 +47,33 @@ int Graph::addArc(int _startVertex, int _endVertex) {
     return 1;
 }
 
+int Graph::removeArc(int _startVertex, int _endVertex) {
+
+    if (!this->listOfNOdes) return 2;
+
+    if (searchArcInNodes(this->listOfNOdes, _startVertex, _endVertex)) {
+        GraphNode* node = this->listOfNOdes;
+        while (_startVertex != node->startVertex) node = node->next;
+        while (_endVertex != node->endVertex) node = node->next;
+        if (node->prev) {
+            GraphNode* prevNode = node->prev;
+            prevNode->next = node->next;
+            if (node->next) node->next->prev = prevNode;
+            while (prevNode->prev) prevNode = prevNode->prev;
+            this->listOfNOdes = prevNode;
+        } else {
+            if (node->next) {
+                node->next->prev = nullptr;
+                this->listOfNOdes = node->next;
+            } else this->listOfNOdes = nullptr;
+        }
+        delete node;
+        return 0;
+    }
+
+    return 1;
+}
+
 int Graph::searchArc(int _startVertex, int _endVertex) {
     GraphNode * node = this->listOfNOdes;
     int result = 0;
@@ -64,7 +91,7 @@ int Graph::searchArcInNodes(Graph::GraphNode *_graphNode, int _startVertex, int 
     return 0;
 }
 
-Graph::GraphNode* Graph::searchVertexInNodes(int _vertex) {
+Graph::GraphNode* Graph::searchStartVertexInNodes(int _vertex) {
     GraphNode *node = this->listOfNOdes;
 
     while (node) {
@@ -73,16 +100,50 @@ Graph::GraphNode* Graph::searchVertexInNodes(int _vertex) {
     return node;
 }
 
-void Graph::print() {
+Graph::GraphNode* Graph::searchVertexInNodes(int _vertex) {
+
     GraphNode* node = this->listOfNOdes;
 
     while (node) {
-        printNode(node);
-        node = node->next;
+        if (_vertex == node->startVertex || _vertex == node->endVertex) return node; else node = node->next;
     }
-    cout << endl;
+
+    return node;
+}
+
+void Graph::print() {
+    GraphNode *node = this->listOfNOdes;
+
+    if (node) {
+        while (node) {
+            printNode(node);
+            node = node->next;
+        }
+        cout << endl;
+    }
 }
 
 void Graph::printNode(GraphNode* _node) {
     cout << "(" << _node->startVertex << "," << _node->endVertex << ") ";
+}
+
+int Graph::searchVertex(int _vertex) {
+    return (searchVertexInNodes(_vertex)) ? 1 : 0;
+}
+
+int Graph::removeVertex(int _vertex) {
+
+    if (this->listOfNOdes) {
+        GraphNode* searchNode = searchVertexInNodes(_vertex);
+        if (searchNode) {
+            while (searchNode) {
+                removeArc(searchNode->startVertex, searchNode->endVertex);
+                searchNode = searchVertexInNodes(_vertex);
+            }
+            return 0;
+        }
+        return 1;
+    }
+
+    return 2;
 }

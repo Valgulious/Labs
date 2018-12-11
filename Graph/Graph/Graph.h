@@ -15,10 +15,9 @@ private:
         GraphNode *prev = nullptr;
     };
 
-    int topsCount;
     GraphNode *listOfNOdes = nullptr; //Начальный узел
 
-    void sortTops();
+    GraphNode* searchStartVertexInNodes(int _vertex);
     GraphNode* searchVertexInNodes(int _vertex);
     int searchArcInNodes(GraphNode* _graphNode, int _startVertex, int _endVertex);
     void printNode(GraphNode* _node);
@@ -26,15 +25,14 @@ private:
 public:
     Graph() = default;
 
-    int searchVertex(int _vertex);
-    int removeVertex(int _vertex);
+    int searchVertex(int _vertex);//Поиск вершины
+    int removeVertex(int _vertex);//Удаление вершины
 
-    int addArc(int _startVertex, int _endVertex);
-    int searchArc(int _startVertex, int _endVertex);
-    int removeArc(int _startVertex, int _endVertex);
+    int addArc(int _startVertex, int _endVertex); //Добавление дуги
+    int searchArc(int _startVertex, int _endVertex); //Поиск дуги
+    int removeArc(int _startVertex, int _endVertex);//Удаление дуги
 
-    void print();
-//    void printTops();
+    void print(); //Печать дерева
 };
 
 

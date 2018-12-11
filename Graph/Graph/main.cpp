@@ -14,6 +14,9 @@ int main() {
     graph.addArc(1,3);
 
     graph.print();
-    cout << graph.searchArc(1,2) << endl;
+    cout << graph.removeVertex(3) << endl;
+    cout << "start print" << endl;
+    graph.print();
+    cout << "end print" << endl;
     return 0;
 }

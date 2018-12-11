@@ -13,14 +13,31 @@ private:
         int endVertex;
         GraphNode *next = nullptr;
         GraphNode *prev = nullptr;
+        bool passed;
     };
+
+    int countMarkedTops = 0;
+    int lengthOfQueue = 0;
+    int* markedTops = new int[countMarkedTops];
+    int* queueOfTops = new int[lengthOfQueue];
+
 
     GraphNode *listOfNOdes = nullptr; //Начальный узел
 
     GraphNode* searchStartVertexInNodes(int _vertex);
     GraphNode* searchVertexInNodes(int _vertex);
+
     int searchArcInNodes(GraphNode* _graphNode, int _startVertex, int _endVertex);
+
     void printNode(GraphNode* _node);
+
+    GraphNode* firstArc(int _vertex);
+    void markVertex(int _vertex);
+    void passArc(GraphNode *_node);
+    bool unlabeled(int _vertex);
+    GraphNode* nextArc(GraphNode* _node, int _startVertex);
+    void addToQueue(int _vertex);
+    int removeFromQueue();
 
 public:
     Graph() = default;
@@ -33,6 +50,8 @@ public:
     int removeArc(int _startVertex, int _endVertex);//Удаление дуги
 
     void print(); //Печать дерева
+
+    int wideBypass();
 };
 
 

@@ -147,3 +147,99 @@ int Graph::removeVertex(int _vertex) {
 
     return 2;
 }
+
+int Graph::wideBypass() {
+    if (!this->listOfNOdes) return 1;
+
+    GraphNode* node = this->listOfNOdes;
+
+    addToQueue(node->startVertex);
+    markVertex(node->startVertex);
+    while (lengthOfQueue) {
+        int q = removeFromQueue();
+        GraphNode* arc = firstArc(q);
+        while (arc) {
+            passArc(arc);
+            int p = arc->endVertex;
+            if (unlabeled(p)) {
+                markVertex(p);
+                addToQueue(p);
+            }
+            arc = nextArc(arc, q);
+        }
+//        markVertex(q);
+        cout << q << " ";
+    }
+
+//    for (int i = 1; i < countMarkedTops; ++i) cout << markedTops[i] << " ";
+    cout << endl;
+    return 0;
+}
+
+void Graph::markVertex(int _vertex) {
+    int* newArray = new int[countMarkedTops+1];
+
+    for (int i = 0; i < countMarkedTops; i++) {
+        newArray[i] = markedTops[i];
+    }
+    newArray[countMarkedTops] = _vertex;
+    ++countMarkedTops;
+    int* deleteArray = markedTops;
+    markedTops = newArray;
+    delete [] deleteArray;
+}
+
+void Graph::passArc(Graph::GraphNode *_node) {
+    _node->passed = true;
+}
+
+Graph::GraphNode* Graph::nextArc(Graph::GraphNode *_node, int _startVertex) {
+    GraphNode* nextNode = _node->next;
+    return (nextNode && _startVertex == nextNode->startVertex && !nextNode->passed) ? nextNode : nullptr;
+}
+
+void Graph::addToQueue(int _vertex) {
+    int* newArray = new int[lengthOfQueue+1];
+
+    for (int i = 0; i < lengthOfQueue; i++) {
+        newArray[i] = queueOfTops[i];
+    }
+    newArray[lengthOfQueue] = _vertex;
+    ++lengthOfQueue;
+    int* deleteArray = this->queueOfTops;
+    this->queueOfTops = newArray;
+    delete [] deleteArray;
+}
+
+bool Graph::unlabeled(int _vertex) {
+    for (int i = 0; i < countMarkedTops; ++i) {
+        if (_vertex == markedTops[i]) return false;
+    }
+
+    return true;
+}
+
+Graph::GraphNode* Graph::firstArc(int _vertex) {
+    GraphNode* node = this->listOfNOdes;
+
+    while (node) if (_vertex == node->startVertex) return node; else node = node->next;
+
+    return nullptr;
+}
+
+int Graph::removeFromQueue() {
+    int* newArray = new int[lengthOfQueue-1];
+    int result = queueOfTops[0];
+
+    for (int i = 1; i < lengthOfQueue; i++) {
+        newArray[i-1] = queueOfTops[i];
+    }
+
+    --lengthOfQueue;
+    int* deleteArray = queueOfTops;
+    queueOfTops = newArray;
+
+    delete [] deleteArray;
+
+    return result;
+}

@@ -51,7 +51,7 @@ public:
 
     void print(); //Печать дерева
 
-    int wideBypass();
+    int wideBypass(); // Обход в ширину с посещением всех вершин
 };
 
 

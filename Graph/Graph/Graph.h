@@ -39,6 +39,10 @@ private:
     void addToQueue(int _vertex);
     int removeFromQueue();
 
+    int ham();
+    int call(int _vertex);
+    int exodus(int _vertex);
+
 public:
     Graph() = default;
 
@@ -52,6 +56,8 @@ public:
     void print(); //Печать дерева
 
     int wideBypass(); // Обход в ширину с посещением всех вершин
+
+    int hamiltonCycles();
 };
 
 

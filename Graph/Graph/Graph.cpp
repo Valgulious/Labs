@@ -1,10 +1,12 @@
 #include "Graph.h"
 
-int Graph::searchVertex(int _vertex) {
+int Graph::searchVertex(int _vertex)
+{
     return (searchVertexInNodes(_vertex)) ? 1 : 0;
 }
 
-int Graph::removeVertex(int _vertex) {
+int Graph::removeVertex(int _vertex)
+{
 
     if (this->listOfNOdes) {
         GraphNode* searchNode = searchVertexInNodes(_vertex);
@@ -21,7 +23,8 @@ int Graph::removeVertex(int _vertex) {
     return 2;
 }
 
-int Graph::addArc(int _startVertex, int _endVertex) {
+int Graph::addArc(int _startVertex, int _endVertex)
+{
     GraphNode* node = searchStartVertexInNodes(_startVertex);
     auto insertNode = new GraphNode;
     insertNode->startVertex = _startVertex;
@@ -68,7 +71,8 @@ int Graph::addArc(int _startVertex, int _endVertex) {
     return 1;
 }
 
-int Graph::searchArc(int _startVertex, int _endVertex) {
+int Graph::searchArc(int _startVertex, int _endVertex)
+{
     GraphNode * node = this->listOfNOdes;
     int result = 0;
     if (node) {
@@ -78,7 +82,8 @@ int Graph::searchArc(int _startVertex, int _endVertex) {
     return result;
 }
 
-int Graph::removeArc(int _startVertex, int _endVertex) {
+int Graph::removeArc(int _startVertex, int _endVertex)
+{
 
     if (!this->listOfNOdes) return 2;
 
@@ -105,7 +110,8 @@ int Graph::removeArc(int _startVertex, int _endVertex) {
     return 1;
 }
 
-void Graph::print() {
+void Graph::print()
+{
     GraphNode *node = this->listOfNOdes;
 
     if (node) {
@@ -117,7 +123,8 @@ void Graph::print() {
     }
 }
 
-int Graph::wideBypass() {
+int Graph::wideBypass()
+{
     if (!this->listOfNOdes) return 1;
 
     GraphNode* node = this->listOfNOdes;
@@ -149,7 +156,8 @@ int Graph::wideBypass() {
     return 0;
 }
 
-Graph::GraphNode* Graph::searchStartVertexInNodes(int _vertex) {
+Graph::GraphNode* Graph::searchStartVertexInNodes(int _vertex)
+{
     GraphNode *node = this->listOfNOdes;
 
     while (node) {
@@ -158,7 +166,8 @@ Graph::GraphNode* Graph::searchStartVertexInNodes(int _vertex) {
     return node;
 }
 
-Graph::GraphNode* Graph::searchVertexInNodes(int _vertex) {
+Graph::GraphNode* Graph::searchVertexInNodes(int _vertex)
+{
 
     GraphNode* node = this->listOfNOdes;
 
@@ -169,18 +178,21 @@ Graph::GraphNode* Graph::searchVertexInNodes(int _vertex) {
     return node;
 }
 
-int Graph::searchArcInNodes(Graph::GraphNode *_graphNode, int _startVertex, int _endVertex) {
+int Graph::searchArcInNodes(Graph::GraphNode *_graphNode, int _startVertex, int _endVertex)
+{
     if (_graphNode) {
         return (_startVertex == _graphNode->startVertex && _endVertex == _graphNode->endVertex) ? 1 : searchArcInNodes(_graphNode->next, _startVertex, _endVertex);
     }
     return 0;
 }
 
-void Graph::printNode(GraphNode* _node) {
+void Graph::printNode(GraphNode* _node)
+{
     cout << "(" << _node->startVertex << "," << _node->endVertex << ") ";
 }
 
-Graph::GraphNode* Graph::firstArc(int _vertex) {
+Graph::GraphNode* Graph::firstArc(int _vertex)
+{
     GraphNode* node = this->listOfNOdes;
 
     while (node) if (_vertex == node->startVertex) return node; else node = node->next;
@@ -188,7 +200,8 @@ Graph::GraphNode* Graph::firstArc(int _vertex) {
     return nullptr;
 }
 
-void Graph::markVertex(int _vertex) {
+void Graph::markVertex(int _vertex)
+{
     int* newArray = new int[countMarkedTops+1];
 
     for (int i = 0; i < countMarkedTops; i++) {
@@ -201,11 +214,13 @@ void Graph::markVertex(int _vertex) {
     delete [] deleteArray;
 }
 
-void Graph::passArc(Graph::GraphNode *_node) {
+void Graph::passArc(Graph::GraphNode *_node)
+{
     _node->passed = true;
 }
 
-bool Graph::unlabeled(int _vertex) {
+bool Graph::unlabeled(int _vertex)
+{
     for (int i = 0; i < countMarkedTops; ++i) {
         if (_vertex == markedTops[i]) return false;
     }
@@ -213,12 +228,14 @@ bool Graph::unlabeled(int _vertex) {
     return true;
 }
 
-Graph::GraphNode* Graph::nextArc(Graph::GraphNode *_node, int _startVertex) {
+Graph::GraphNode* Graph::nextArc(Graph::GraphNode *_node, int _startVertex)
+{
     GraphNode* nextNode = _node->next;
     return (nextNode && _startVertex == nextNode->startVertex && !nextNode->passed) ? nextNode : nullptr;
 }
 
-void Graph::addToQueue(int _vertex) {
+void Graph::addToQueue(int _vertex)
+{
     int* newArray = new int[lengthOfQueue+1];
 
     for (int i = 0; i < lengthOfQueue; i++) {
@@ -231,7 +248,8 @@ void Graph::addToQueue(int _vertex) {
     delete [] deleteArray;
 }
 
-int Graph::removeFromQueue() {
+int Graph::removeFromQueue()
+{
     int* newArray = new int[lengthOfQueue-1];
     int result = queueOfTops[0];
 
@@ -244,6 +262,41 @@ int Graph::removeFromQueue() {
     queueOfTops = newArray;
 
     delete [] deleteArray;
+
+    return result;
+}
+
+int Graph::hamiltonCycles()
+{
+    GraphNode *node = this->listOfNOdes;
+
+    if (!node) return 2;
+
+    return ham();
+}
+
+int Graph::ham()
+{
+
+    return 0;
+}
+
+int Graph::call(int _vertex)
+{
+    GraphNode *node = this->listOfNOdes;
+    int result = 0;
+
+    while (node) if (_vertex == node->endVertex) ++result;
+
+    return result;
+}
+
+int Graph::exodus(int _vertex)
+{
+    GraphNode *node = this->listOfNOdes;
+    int result = 0;
+
+    while (node) if (_vertex == node->startVertex) ++result;
 
     return result;
 }

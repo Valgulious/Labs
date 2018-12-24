@@ -51,8 +51,7 @@ int main() {
 
     BTree t;
 
-    insert(&t, 20);
-    insert(&t, 5);
+    /* insert(&t, 5);
     insert(&t, 8);
     insert(&t, 71);
     insert(&t, 13);
@@ -64,18 +63,46 @@ int main() {
     insert(&t, 1);
     insert(&t, 5);
     insert(&t, 13);
-    insert(&t, 28);
-    for (int i=1;i<30;i++)
-        if (search(&t,i)==0)  insert(&t, i);
+    insert(&t, 28);*/
+    /*for (int i=1;i<30;i++)
+    { insert(&t, i);
+    insert(&t, 30- i);}
     printBTree(&t);
 
-    for (int i=1;i<30;i++) {
-        if (search(&t, i) == 1)
-            remove(&t, i);
+    for (int i=1;i<32;i++) {
+        {
+            if (search(&t, i) == 1)
+                remove(&t, i);
+            remove(&t, 32- i);
+        }
         cout<<"DEL"<<"   "<<i<<"   "<<endl;
-        printBTree(&t);
-    }
 
+    }
+    printBTree(&t);
+
+    for (int i=1;i<30;i++)
+    { insert(&t, i);
+        insert(&t, 30- i);}
+    printBTree(&t);
+
+    cout << search(&t, 29) << endl;
+    cout << remove(&t, 29) << endl;*/
+
+    insert(&t, 3);
+    insert(&t, 2);
+    insert(&t, 1);
+    insert(&t, 4);
+    insert(&t, 5);
+    insert(&t, 6);
+    insert(&t, 7);
+    insert(&t, 8);
+    insert(&t, 9);
+    insert(&t, 10);
+    insert(&t, 11);
+    insert(&t, 12);
+    printBTree(&t);
+    cout << remove(&t, 10) <<endl;
+    printBTree(&t);
 }
 
 int findKey(BTreeNode *_BTreeNode, int _key)

@@ -20,6 +20,7 @@ private:
     struct Chain {
         int vertex;
         Chain *next = nullptr;
+        Chain *prev = nullptr;
     };
 
     int countMarkedTops = 0;
@@ -49,7 +50,7 @@ private:
     void addToQueue(int _vertex);
     int removeFromQueue();
 
-    Graph ham(Graph _graph);
+    void ham(Graph* _graph);
     int call(int _vertex);
     int exodus(int _vertex);
     void addVertex(int _vertex);
@@ -58,14 +59,18 @@ private:
     vector<int> oneDeg();
     vector<int> nextVertexes(int _vertex);
     void addVertexToChain(Chain* _chain, int _vertex);
+    void addVertexInBeginOfChain(Chain* _chain, int _vertex);
     int lastVertex(Chain* _chain);
+    bool isLastVertex(int _vertex);
+    bool isFirstVertex(int _vertex);
 
-    Graph step1(Graph* _graph);
-    Graph step2(Graph _graph);
+    void step1(Graph* _graph, int _vertex);
+    Graph* step2(Graph _graph);
     void step3(Graph _graph);
 
 public:
     Graph() = default;
+    Graph(const Graph & _graph);
 
     int searchVertex(int _vertex);//Поиск вершины
     int removeVertex(int _vertex);//Удаление вершины

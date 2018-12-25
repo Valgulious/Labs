@@ -1,5 +1,15 @@
 #include "Graph.h"
 
+Graph::Graph(const Graph & _graph)
+{
+    GraphNode* node = _graph.listOfNOdes;
+
+    while (node) {
+        this->addArc(node->startVertex, node->endVertex);
+        node = node->next;
+    }
+}
+
 int Graph::searchVertex(int _vertex)
 {
     return (searchVertexInNodes(_vertex)) ? 1 : 0;
@@ -379,25 +389,83 @@ int Graph::hamiltonCycles()
 
     chains.push_back(ch);
 
-    Graph graph;
+    Graph graph(*this);
 
-    Graph newGraph = ham(graph);
+    ham(&graph);
 
     return 0;
 }
 
-Graph Graph::ham(Graph _graph)
-{
-
-    step1(&_graph);
-    return _graph;
-}
-
-Graph Graph::step1(Graph* _graph)
+void Graph::ham(Graph* _graph)
 {
     vector<int> eVertexes = nextVertexes(lastVertex(chains[0]));
 
-    _graph->addArc(lastVertex(chains[0]), eVertexes.back());
+    while (!eVertexes.empty()) {
+        step1(_graph, eVertexes.back());
+        while (!eVertexes.empty()) {
+            _graph = step2(*_graph);
+            if (!_graph) return;
+
+        }
+        eVertexes.pop_back();
+    }
+}
+
+void Graph::step1(Graph* _graph, int _vertex)
+{
+    for (int i = 0; i < countOfVertexes; ++i) {
+        if (_vertex != vertexes[i]) _graph->removeArc(lastVertex(chains[0]), vertexes[i]);
+        if (lastVertex(chains[0]) != vertexes[i]) _graph->removeArc(vertexes[i], _vertex);
+    }
+
+    for (auto chain : chains) {
+        if (_vertex == chain->vertex) _graph->removeArc(lastVertex(chain), chains[0]->vertex);
+    }
+}
+
+Graph* Graph::step2(Graph _graph)
+{
+    auto oneDegVertexes = _graph.oneDeg();
+
+    while (!oneDegVertexes.empty()) {
+        for (auto vertex : oneDegVertexes) {
+            if (!_graph.isLastVertex(vertex) && 1 == _graph.call(vertex)) {
+                for (int i = 0; i < countOfVertexes; ++i) {
+                    if (vertex != vertexes[i])
+                        _graph.removeArc(_graph.searchVertexInNodes(vertex)->startVertex, vertexes[i]);
+                }
+                if (_graph.zeroDeg()) return nullptr;
+                if (_graph.isLastVertex(_graph.searchVertexInNodes(vertex)->startVertex)) {
+                    for (auto chain : chains) {
+                        if (_graph.searchVertexInNodes(vertex)->startVertex == _graph.lastVertex(chain))
+                            _graph.addVertexToChain(chain, vertex);
+                    }
+                } else {
+                    auto newChain = new Chain;
+                    newChain->vertex = _graph.searchVertexInNodes(vertex)->startVertex;
+                    _graph.addVertexToChain(newChain, vertex);
+                    _graph.chains.push_back(newChain);
+                }
+            }
+            if (!_graph.isFirstVertex(vertex) && 1 == _graph.exodus(vertex)) {
+                for (int i = 0; i < countOfVertexes; ++i) {
+                    if (_graph.searchStartVertexInNodes(vertex)->startVertex != vertexes[i])
+                        _graph.removeArc(vertexes[i], _graph.searchStartVertexInNodes(vertex)->endVertex);
+                }
+                if (_graph.zeroDeg()) return nullptr;
+                if (_graph.isFirstVertex(_graph.searchStartVertexInNodes(vertex)->endVertex)) {
+                    for (auto chain : chains)
+                        if (_graph.searchStartVertexInNodes(vertex)->endVertex == chain->vertex)
+                            _graph.addVertexInBeginOfChain(chain, vertex);
+                } else {
+                    auto newChain = new Chain;
+                    newChain->vertex = vertex;
+                    addVertexToChain(newChain, _graph.searchStartVertexInNodes(vertex)->endVertex);
+                    _graph.chains.push_back(newChain);
+                }
+            }
+        }
+    }
 }
 
 vector<int> Graph::nextVertexes(int _vertex)
@@ -418,6 +486,7 @@ void Graph::addVertexToChain(Chain* _chain, int _vertex)
     Chain* newChain = new Chain;
     newChain->vertex = _vertex;
     newChain->next = nullptr;
+    newChain->prev = nullptr;
 
     if (!_chain) {
         _chain = newChain;
@@ -427,7 +496,18 @@ void Graph::addVertexToChain(Chain* _chain, int _vertex)
     Chain* chain = _chain;
 
     while(chain->next) chain = chain->next;
+    newChain->prev = chain;
     chain->next = newChain;
+}
+
+void Graph::addVertexInBeginOfChain(Graph::Chain *_chain, int _vertex)
+{
+    Chain* chain = _chain;
+    auto newChain = new Chain;
+    newChain->vertex = _vertex;
+    newChain->next = chain;
+    chain->prev = newChain;
+    _chain = newChain;
 }
 
 int Graph::lastVertex(Graph::Chain* _chain)
@@ -437,4 +517,18 @@ int Graph::lastVertex(Graph::Chain* _chain)
     while (chain->next) chain = chain->next;
 
     return chain->vertex;
+}
+
+bool Graph::isLastVertex(int _vertex)
+{
+    for (auto chain : chains) if (_vertex == lastVertex(chain)) return true;
+
+    return false;
+}
+
+bool Graph::isFirstVertex(int _vertex)
+{
+    for (auto chain : chains) if (_vertex == chain->vertex) return true;
+
+    return false;
 }

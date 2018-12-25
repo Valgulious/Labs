@@ -15,6 +15,7 @@ int Graph::removeVertex(int _vertex)
                 removeArc(searchNode->startVertex, searchNode->endVertex);
                 searchNode = searchVertexInNodes(_vertex);
             }
+//            removeVertexFromArray(_vertex);
             return 0;
         }
         return 1;
@@ -32,6 +33,8 @@ int Graph::addArc(int _startVertex, int _endVertex)
 
     if (!this->listOfNOdes) {
         this->listOfNOdes = insertNode;
+        addVertex(_startVertex);
+        addVertex(_endVertex);
         return 0;
     }
 
@@ -66,6 +69,8 @@ int Graph::addArc(int _startVertex, int _endVertex)
         }
         while(node->prev) node = node->prev;
         this->listOfNOdes = node;
+        addVertex(_startVertex);
+        addVertex(_endVertex);
         return 0;
     }
     return 1;
@@ -104,6 +109,8 @@ int Graph::removeArc(int _startVertex, int _endVertex)
             } else this->listOfNOdes = nullptr;
         }
         delete node;
+        if (!searchVertexInNodes(_startVertex)) removeVertexFromArray(_startVertex);
+        if (!searchVertexInNodes(_endVertex)) removeVertexFromArray(_endVertex);
         return 0;
     }
 
@@ -120,7 +127,7 @@ void Graph::print()
             node = node->next;
         }
         cout << endl;
-    }
+    } else cout << "Graph is empty" << endl;
 }
 
 int Graph::wideBypass()
@@ -286,7 +293,10 @@ int Graph::call(int _vertex)
     GraphNode *node = this->listOfNOdes;
     int result = 0;
 
-    while (node) if (_vertex == node->endVertex) ++result;
+    while (node) {
+        if (_vertex == node->endVertex) ++result;
+        node = node->next;
+    }
 
     return result;
 }
@@ -296,7 +306,62 @@ int Graph::exodus(int _vertex)
     GraphNode *node = this->listOfNOdes;
     int result = 0;
 
-    while (node) if (_vertex == node->startVertex) ++result;
+    while (node) {
+        if (_vertex == node->startVertex) ++result;
+        node = node->next;
+    }
 
     return result;
+}
+
+void Graph::addVertex(int _vertex)
+{
+    for (int i = 0; i < countOfVertexes; ++i) if (_vertex == vertexes[i]) return;
+
+    int* newArray = new int[countOfVertexes+1];
+    int* deleteArray = vertexes;
+
+    for (int i = 0; i < countOfVertexes; ++i) newArray[i] = vertexes[i];
+
+    newArray[countOfVertexes] = _vertex;
+    ++countOfVertexes;
+
+    vertexes = newArray;
+    delete [] deleteArray;
+}
+
+void Graph::removeVertexFromArray(int _vertex)
+{
+    if (!countOfVertexes) return;
+
+    int count = 0;
+    int* newArray = new int[countOfVertexes-1];
+    int* deleteArray = vertexes;
+
+    while (count < countOfVertexes-1 && _vertex != vertexes[count]) {
+        newArray[count] = vertexes[count];
+        ++count;
+    }
+
+    if (count != countOfVertexes) {
+        for (int i = count + 1; i < countOfVertexes; ++i) {
+            newArray[count] = vertexes[i];
+            ++count;
+        }
+    } else if (_vertex != vertexes[count]) {
+        delete [] newArray;
+        return;
+    }
+
+    --countOfVertexes;
+    vertexes = newArray;
+    delete [] deleteArray;
+}
+
+void Graph::printVertexes()
+{
+    if (countOfVertexes) {
+        for (int i = 0; i < countOfVertexes; ++i) cout << vertexes[i] << " ";
+        cout << endl;
+    } else cout << "Vertexes are no peaks" << endl;
 }

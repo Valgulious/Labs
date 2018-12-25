@@ -18,8 +18,11 @@ private:
 
     int countMarkedTops = 0;
     int lengthOfQueue = 0;
+    int countOfVertexes = 0;
+
     int* markedTops = new int[countMarkedTops];
     int* queueOfTops = new int[lengthOfQueue];
+    int* vertexes = new int[countOfVertexes];
 
 
     GraphNode *listOfNOdes = nullptr; //Начальный узел
@@ -40,8 +43,10 @@ private:
     int removeFromQueue();
 
     int ham();
-    int call(int _vertex);
-    int exodus(int _vertex);
+//    int call(int _vertex);
+//    int exodus(int _vertex);
+    void addVertex(int _vertex);
+    void removeVertexFromArray(int _vertex);
 
 public:
     Graph() = default;
@@ -54,10 +59,13 @@ public:
     int removeArc(int _startVertex, int _endVertex);//Удаление дуги
 
     void print(); //Печать дерева
+    void printVertexes(); //Печать вершин дерева
 
     int wideBypass(); // Обход в ширину с посещением всех вершин
 
     int hamiltonCycles();
+    int call(int _vertex);
+    int exodus(int _vertex);
 };
 
 

@@ -14,6 +14,11 @@ int main() {
     graph.addArc(1,3);
 
     graph.print();
-    cout << graph.wideBypass() << endl;
+    graph.printVertexes();
+
+    cout << "e = " << graph.exodus(3) << endl;
+    cout << "c = " << graph.call(3) << endl;
+
+//    cout << graph.wideBypass() << endl;
     return 0;
 }

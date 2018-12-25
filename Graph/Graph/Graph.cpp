@@ -273,21 +273,6 @@ int Graph::removeFromQueue()
     return result;
 }
 
-int Graph::hamiltonCycles()
-{
-    GraphNode *node = this->listOfNOdes;
-
-    if (!node) return 2;
-
-    return ham();
-}
-
-int Graph::ham()
-{
-
-    return 0;
-}
-
 int Graph::call(int _vertex)
 {
     GraphNode *node = this->listOfNOdes;
@@ -364,4 +349,92 @@ void Graph::printVertexes()
         for (int i = 0; i < countOfVertexes; ++i) cout << vertexes[i] << " ";
         cout << endl;
     } else cout << "Vertexes are no peaks" << endl;
+}
+
+bool Graph::zeroDeg()
+{
+    for (int i = 0; i < countOfVertexes; ++i) if (!exodus(vertexes[i]) || !call(vertexes[i])) return true;
+
+    return false;
+}
+
+vector<int> Graph::oneDeg() {
+    vector<int> arr;
+    for (int i = 0; i < countOfVertexes; ++i) {
+        if (1 == exodus(vertexes[i]) || 1 == call(vertexes[i])) arr.push_back(vertexes[i]);
+    }
+
+    return arr;
+}
+
+int Graph::hamiltonCycles()
+{
+    GraphNode *node = this->listOfNOdes;
+
+    if (!node) return 2;
+
+    auto ch = new Chain;
+
+    addVertexToChain(ch, node->startVertex);
+
+    chains.push_back(ch);
+
+    Graph graph;
+
+    Graph newGraph = ham(graph);
+
+    return 0;
+}
+
+Graph Graph::ham(Graph _graph)
+{
+
+    step1(&_graph);
+    return _graph;
+}
+
+Graph Graph::step1(Graph* _graph)
+{
+    vector<int> eVertexes = nextVertexes(lastVertex(chains[0]));
+
+    _graph->addArc(lastVertex(chains[0]), eVertexes.back());
+}
+
+vector<int> Graph::nextVertexes(int _vertex)
+{
+    vector<int> arr;
+    GraphNode* node = this->searchVertexInNodes(_vertex);
+
+    while (node && _vertex == node->startVertex) {
+        arr.push_back(node->endVertex);
+        node = node->next;
+    }
+
+    return arr;
+}
+
+void Graph::addVertexToChain(Chain* _chain, int _vertex)
+{
+    Chain* newChain = new Chain;
+    newChain->vertex = _vertex;
+    newChain->next = nullptr;
+
+    if (!_chain) {
+        _chain = newChain;
+        return;
+    }
+
+    Chain* chain = _chain;
+
+    while(chain->next) chain = chain->next;
+    chain->next = newChain;
+}
+
+int Graph::lastVertex(Graph::Chain* _chain)
+{
+    Chain* chain = _chain;
+
+    while (chain->next) chain = chain->next;
+
+    return chain->vertex;
 }

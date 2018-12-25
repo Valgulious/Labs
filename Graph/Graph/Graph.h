@@ -2,18 +2,24 @@
 #define GRAPH_GRAPH_H
 
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
 class Graph {
 
 private:
-    struct GraphNode{
+    struct GraphNode {
         int startVertex;
         int endVertex;
         GraphNode *next = nullptr;
         GraphNode *prev = nullptr;
         bool passed;
+    };
+
+    struct Chain {
+        int vertex;
+        Chain *next = nullptr;
     };
 
     int countMarkedTops = 0;
@@ -23,6 +29,7 @@ private:
     int* markedTops = new int[countMarkedTops];
     int* queueOfTops = new int[lengthOfQueue];
     int* vertexes = new int[countOfVertexes];
+    vector<Chain*> chains;
 
 
     GraphNode *listOfNOdes = nullptr; //Начальный узел
@@ -42,11 +49,20 @@ private:
     void addToQueue(int _vertex);
     int removeFromQueue();
 
-    int ham();
-//    int call(int _vertex);
-//    int exodus(int _vertex);
+    Graph ham(Graph _graph);
+    int call(int _vertex);
+    int exodus(int _vertex);
     void addVertex(int _vertex);
     void removeVertexFromArray(int _vertex);
+    bool zeroDeg();
+    vector<int> oneDeg();
+    vector<int> nextVertexes(int _vertex);
+    void addVertexToChain(Chain* _chain, int _vertex);
+    int lastVertex(Chain* _chain);
+
+    Graph step1(Graph* _graph);
+    Graph step2(Graph _graph);
+    void step3(Graph _graph);
 
 public:
     Graph() = default;
@@ -64,8 +80,6 @@ public:
     int wideBypass(); // Обход в ширину с посещением всех вершин
 
     int hamiltonCycles();
-    int call(int _vertex);
-    int exodus(int _vertex);
 };
 
 

@@ -66,6 +66,7 @@ private:
 
     void step1(Graph* _graph, int _vertex);
     Graph* step2(Graph _graph);
+    void mergeChains(Graph* _graph);
     void step3(Graph _graph);
 
 public:

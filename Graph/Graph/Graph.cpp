@@ -532,3 +532,50 @@ bool Graph::isFirstVertex(int _vertex)
 
     return false;
 }
+
+void Graph::mergeChains(Graph* _graph)
+{
+    auto chainsIterI = chains.begin();
+    auto chainsIterJ = chains.begin();
+
+//    for (auto chain : chains) {
+//        int last = _graph->lastVertex(*chainsIter);
+//        if (lastVertex(chain) == )
+//    }
+
+    for (int i = 0; i < chains.size(); ++i) {
+        for (int j = 0; j < chains.size(); ++j) {
+            if (_graph->chains[j]->vertex == _graph->lastVertex(chains[i]) && j) {
+                Chain* chain = chains[j]->next;
+                while (chain->next) {
+                    _graph->addVertexToChain(chains[i], chain->vertex);
+                    chain = chain->next;
+                }
+                chains.erase(chainsIterJ);
+            } else if (_graph->chains[j]->vertex == _graph->lastVertex(chains[i]) && !j) {
+                Chain* chain = chains[i];
+                while (chain->next) {
+                    chain = chain->next;
+                }
+                while (chain->prev) {
+                    _graph->addVertexInBeginOfChain(chains[j], chain->vertex);
+                    chain = chain->prev;
+                }
+                chains.erase(chainsIterI);
+            }
+            chainsIterJ++;
+        }
+        chainsIterJ = chains.begin();
+        chainsIterI++;
+    }
+
+//    while (chainsIterI != chains.end()-1) {
+//        int last = _graph->lastVertex(*chainsIterI);
+//        chainsIterI++;
+//        if (last == *chainsIterI->vertex)
+//    }
+//    for (auto chainsIter = chains.begin(); chainsIter != chains.end(); chainsIter++) {
+//
+//    }
+
+}

@@ -50,7 +50,7 @@ private:
     void addToQueue(int _vertex);
     int removeFromQueue();
 
-    void ham(Graph* _graph);
+    int ham(Graph* _graph);
     int call(int _vertex);
     int exodus(int _vertex);
     void addVertex(int _vertex);
@@ -63,11 +63,12 @@ private:
     int lastVertex(Chain* _chain);
     bool isLastVertex(int _vertex);
     bool isFirstVertex(int _vertex);
+    int sizeOfChain(Chain * _chain);
 
     void step1(Graph* _graph, int _vertex);
     Graph* step2(Graph _graph);
     void mergeChains(Graph* _graph);
-    void step3(Graph _graph);
+//    void step3(Graph _graph);
 
 public:
     Graph() = default;
@@ -83,7 +84,7 @@ public:
     void print(); //Печать дерева
     void printVertexes(); //Печать вершин дерева
 
-    int wideBypass(); // Обход в ширину с посещением всех вершин
+    int wideBypass(int _vertex); // Обход в ширину с посещением всех вершин
 
     int hamiltonCycles();
 };

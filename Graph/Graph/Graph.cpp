@@ -140,11 +140,13 @@ void Graph::print()
     } else cout << "Graph is empty" << endl;
 }
 
-int Graph::wideBypass()
+int Graph::wideBypass(int _vertex)
 {
     if (!this->listOfNOdes) return 1;
 
-    GraphNode* node = this->listOfNOdes;
+    GraphNode* node = searchStartVertexInNodes(_vertex);
+
+    if (!node) return 2;
 
     addToQueue(node->startVertex);
     markVertex(node->startVertex);
@@ -391,21 +393,28 @@ int Graph::hamiltonCycles()
 
     Graph graph(*this);
 
-    ham(&graph);
+    int result = ham(&graph);
 
-    return 0;
+    if (result) {
+        printHamCycle();
+    }
+
+    return result;
 }
 
-void Graph::ham(Graph* _graph)
+int Graph::ham(Graph* _graph)
 {
     vector<int> eVertexes = nextVertexes(lastVertex(chains[0]));
 
     while (!eVertexes.empty()) {
         step1(_graph, eVertexes.back());
         while (!eVertexes.empty()) {
-            _graph = step2(*_graph);
-            if (!_graph) return;
-
+            auto newGraph = step2(*_graph);
+            if (!newGraph) break; else {
+                _graph = newGraph;
+                ham(_graph);
+            }
+            if (sizeOfChain(chains[0]) == countOfVertexes) return 0; else
         }
         eVertexes.pop_back();
     }
@@ -465,7 +474,12 @@ Graph* Graph::step2(Graph _graph)
                 }
             }
         }
+        mergeChains(&_graph);
     }
+
+    auto newGraph = new Graph(_graph);
+
+    return newGraph;
 }
 
 vector<int> Graph::nextVertexes(int _vertex)
@@ -483,7 +497,7 @@ vector<int> Graph::nextVertexes(int _vertex)
 
 void Graph::addVertexToChain(Chain* _chain, int _vertex)
 {
-    Chain* newChain = new Chain;
+    auto newChain = new Chain;
     newChain->vertex = _vertex;
     newChain->next = nullptr;
     newChain->prev = nullptr;
@@ -578,4 +592,17 @@ void Graph::mergeChains(Graph* _graph)
 //
 //    }
 
+}
+
+int Graph::sizeOfChain(Graph::Chain *_chain)
+{
+    auto chain = _chain;
+
+    if (!chain) return 0;
+
+    int count = 0;
+
+    while (chain->next) ++count;
+
+    return count;
 }

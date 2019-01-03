@@ -12,7 +12,7 @@ int main() {
     graph.addArc(1,2);
     graph.addArc(1,3);*/
 
-    for (int i = 0; i < 10; ++i) {
+    /*for (int i = 0; i < 10; ++i) {
         for (int j = 0; j < i; ++j) {
             graph.addArc(i, j);
         }
@@ -38,9 +38,16 @@ int main() {
 
     graph.print();
 
-    cout << graph.wideBypass(1) << endl;
+    cout << graph.wideBypass(1) << endl;*/
 
 
+    graph.addArc(1,2);
+    graph.addArc(2,3);
+    graph.addArc(3,4);
+    graph.addArc(4,5);
+    graph.addArc(5,1);
+
+    cout << graph.hamiltonCycles() << endl;
     return 0;
 
 

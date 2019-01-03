@@ -58,13 +58,14 @@ private:
     bool zeroDeg();
     vector<int> oneDeg();
     vector<int> nextVertexes(int _vertex);
-    void addVertexToChain(Chain* _chain, int _vertex);
+    Chain* addVertexToChain(Chain* _chain, int _vertex);
     void addVertexInBeginOfChain(Chain* _chain, int _vertex);
     int lastVertex(Chain* _chain);
     bool isLastVertex(int _vertex);
     bool isFirstVertex(int _vertex);
     int sizeOfChain(Chain * _chain);
     void printHamCycle(Graph _graph);
+    void deleteCycles();
 
     Graph step1(Graph _graph, int _vertex);
     Graph step2(Graph _graph);

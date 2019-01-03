@@ -50,7 +50,7 @@ private:
     void addToQueue(int _vertex);
     int removeFromQueue();
 
-    int ham(Graph* _graph);
+    Graph ham(Graph _graph);
     int call(int _vertex);
     int exodus(int _vertex);
     void addVertex(int _vertex);
@@ -64,10 +64,12 @@ private:
     bool isLastVertex(int _vertex);
     bool isFirstVertex(int _vertex);
     int sizeOfChain(Chain * _chain);
+    void printHamCycle(Graph _graph);
 
-    void step1(Graph* _graph, int _vertex);
-    Graph* step2(Graph _graph);
+    Graph step1(Graph _graph, int _vertex);
+    Graph step2(Graph _graph);
     void mergeChains(Graph* _graph);
+    bool isHam();
 //    void step3(Graph _graph);
 
 public:

@@ -385,54 +385,69 @@ int Graph::hamiltonCycles()
 
     if (!node) return 2;
 
-    auto ch = new Chain;
+   /* auto ch = new Chain;
 
     addVertexToChain(ch, node->startVertex);
 
     chains.push_back(ch);
 
-    Graph graph(*this);
+    auto graph = new Graph(*this);
+    bool flag = true;
 
-    int result = ham(&graph);
+    while (flag) {
+        graph = ham(*graph);
+        if (graph) flag = false;
+    }*/
 
-    if (result) {
-        printHamCycle();
-    }
+   for (int i = 0; i < countOfVertexes; ++i) {
+       Graph graph(*this);
+       auto chain = new Chain;
 
-    return result;
+       addVertexToChain(chain, vertexes[i]);
+       graph.chains.push_back(chain);
+       graph = ham(graph);
+       if (graph.isHam()) {
+           printHamCycle(graph);
+           return 0;
+       }
+   }
+
+    return 1;
 }
 
-int Graph::ham(Graph* _graph)
+Graph Graph::ham(Graph _graph)
 {
-    vector<int> eVertexes = nextVertexes(lastVertex(chains[0]));
+    vector<int> eVertexes = nextVertexes(lastVertex(_graph.chains[0]));
 
     while (!eVertexes.empty()) {
-        step1(_graph, eVertexes.back());
-        while (!eVertexes.empty()) {
-            auto newGraph = step2(*_graph);
-            if (!newGraph) break; else {
-                _graph = newGraph;
-                ham(_graph);
+        _graph = step1(_graph, eVertexes.back());
+        _graph = step2(_graph);
+        if (_graph.isHam()) {
+            return _graph;
+        } else if (_graph.zeroDeg()) {
+                eVertexes.pop_back();
+            } else {
+               _graph = ham(_graph);
+               if (_graph.isHam()) return _graph; else eVertexes.pop_back();
             }
-            if (sizeOfChain(chains[0]) == countOfVertexes) return 0; else
-        }
-        eVertexes.pop_back();
     }
+
+    return _graph;
 }
 
-void Graph::step1(Graph* _graph, int _vertex)
+Graph Graph::step1(Graph _graph, int _vertex)
 {
     for (int i = 0; i < countOfVertexes; ++i) {
-        if (_vertex != vertexes[i]) _graph->removeArc(lastVertex(chains[0]), vertexes[i]);
-        if (lastVertex(chains[0]) != vertexes[i]) _graph->removeArc(vertexes[i], _vertex);
+        if (_vertex != vertexes[i]) _graph.removeArc(lastVertex(chains[0]), vertexes[i]);
+        if (lastVertex(chains[0]) != vertexes[i]) _graph.removeArc(vertexes[i], _vertex);
     }
 
     for (auto chain : chains) {
-        if (_vertex == chain->vertex) _graph->removeArc(lastVertex(chain), chains[0]->vertex);
+        if (_vertex == chain->vertex) _graph.removeArc(lastVertex(chain), chains[0]->vertex);
     }
 }
 
-Graph* Graph::step2(Graph _graph)
+Graph Graph::step2(Graph _graph)
 {
     auto oneDegVertexes = _graph.oneDeg();
 
@@ -443,7 +458,7 @@ Graph* Graph::step2(Graph _graph)
                     if (vertex != vertexes[i])
                         _graph.removeArc(_graph.searchVertexInNodes(vertex)->startVertex, vertexes[i]);
                 }
-                if (_graph.zeroDeg()) return nullptr;
+                if (_graph.zeroDeg()) return _graph;
                 if (_graph.isLastVertex(_graph.searchVertexInNodes(vertex)->startVertex)) {
                     for (auto chain : chains) {
                         if (_graph.searchVertexInNodes(vertex)->startVertex == _graph.lastVertex(chain))
@@ -455,13 +470,14 @@ Graph* Graph::step2(Graph _graph)
                     _graph.addVertexToChain(newChain, vertex);
                     _graph.chains.push_back(newChain);
                 }
+                mergeChains(&_graph);
             }
             if (!_graph.isFirstVertex(vertex) && 1 == _graph.exodus(vertex)) {
                 for (int i = 0; i < countOfVertexes; ++i) {
                     if (_graph.searchStartVertexInNodes(vertex)->startVertex != vertexes[i])
                         _graph.removeArc(vertexes[i], _graph.searchStartVertexInNodes(vertex)->endVertex);
                 }
-                if (_graph.zeroDeg()) return nullptr;
+                if (_graph.zeroDeg()) return _graph;
                 if (_graph.isFirstVertex(_graph.searchStartVertexInNodes(vertex)->endVertex)) {
                     for (auto chain : chains)
                         if (_graph.searchStartVertexInNodes(vertex)->endVertex == chain->vertex)
@@ -472,14 +488,13 @@ Graph* Graph::step2(Graph _graph)
                     addVertexToChain(newChain, _graph.searchStartVertexInNodes(vertex)->endVertex);
                     _graph.chains.push_back(newChain);
                 }
+                mergeChains(&_graph);
             }
         }
-        mergeChains(&_graph);
+        oneDegVertexes = _graph.oneDeg();
     }
 
-    auto newGraph = new Graph(_graph);
-
-    return newGraph;
+    return _graph;
 }
 
 vector<int> Graph::nextVertexes(int _vertex)
@@ -605,4 +620,19 @@ int Graph::sizeOfChain(Graph::Chain *_chain)
     while (chain->next) ++count;
 
     return count;
+}
+
+void Graph::printHamCycle(Graph _graph)
+{
+    auto chain = _graph.chains[0];
+
+    while (chain->next) {
+        cout << chain->vertex << "->";
+    }
+    cout << endl;
+}
+
+bool Graph::isHam()
+{
+    return (sizeOfChain(this->chains[0]) == countOfVertexes);
 }

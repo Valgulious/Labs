@@ -44,12 +44,10 @@ int main() {
     graph.addArc(1,2);
     graph.addArc(2,3);
     graph.addArc(3,4);
-    graph.addArc(4,5);
-    graph.addArc(5,1);
+    graph.addArc(1,3);
+    graph.addArc(2,4);
+    graph.addArc(4,1);
 
     cout << graph.hamiltonCycles() << endl;
     return 0;
-
-
-
 }

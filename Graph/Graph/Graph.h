@@ -37,6 +37,7 @@ private:
 
     GraphNode* searchStartVertexInNodes(int _vertex);
     GraphNode* searchVertexInNodes(int _vertex);
+    GraphNode* searchLastVertexInNodes(int _vertex);
 
     int searchArcInNodes(GraphNode* _graphNode, int _startVertex, int _endVertex);
 
@@ -59,7 +60,7 @@ private:
     vector<int> oneDeg();
     vector<int> nextVertexes(int _vertex);
     Chain* addVertexToChain(Chain* _chain, int _vertex);
-    void addVertexInBeginOfChain(Chain* _chain, int _vertex);
+    Chain* addVertexInBeginOfChain(Chain* _chain, int _vertex);
     int lastVertex(Chain* _chain);
     bool isLastVertex(int _vertex);
     bool isFirstVertex(int _vertex);
@@ -69,7 +70,7 @@ private:
 
     Graph step1(Graph _graph, int _vertex);
     Graph step2(Graph _graph);
-    void mergeChains(Graph* _graph);
+    Graph mergeChains(Graph _graph);
     bool isHam();
 //    void step3(Graph _graph);
 

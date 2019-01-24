@@ -422,7 +422,9 @@ Graph Graph::ham(Graph _graph)
 
     while (!eVertexes.empty()) {
         Graph newGraph(step1(_graph, eVertexes.back()));
-        newGraph = step2(_graph);
+//        newGraph = step2(_graph);
+        Graph test(step2(_graph));
+        newGraph = test;
         if (newGraph.isHam()) {
             return newGraph;
         } else if (newGraph.zeroDeg()) {
@@ -446,6 +448,8 @@ Graph Graph::step1(Graph _graph, int _vertex)
     for (auto chain : _graph.chains) {
         if (_vertex == chain->vertex) _graph.removeArc(lastVertex(chain), _graph.chains[0]->vertex);
     }
+
+    return _graph;
 }
 
 Graph Graph::step2(Graph _graph)
@@ -455,9 +459,10 @@ Graph Graph::step2(Graph _graph)
     while (!oneDegVertexes.empty()) {
         for (auto vertex : oneDegVertexes) {
             if (!_graph.isLastVertex(vertex) && 1 == _graph.call(vertex)) {
+                int startVertex = _graph.searchLastVertexInNodes(vertex)->startVertex;
                 for (int i = 0; i < _graph.countOfVertexes; ++i) {
                     if (vertex != _graph.vertexes[i])
-                        _graph.removeArc(_graph.searchVertexInNodes(vertex)->startVertex, _graph.vertexes[i]);
+                        _graph.removeArc(startVertex, _graph.vertexes[i]);
                 }
                 if (_graph.zeroDeg()) return _graph;
                 if (_graph.isLastVertex(_graph.searchVertexInNodes(vertex)->startVertex)) {
@@ -465,13 +470,13 @@ Graph Graph::step2(Graph _graph)
                         if (_graph.searchVertexInNodes(vertex)->startVertex == _graph.lastVertex(chain))
                             _graph.addVertexToChain(chain, vertex);
                     }
-                } else {
+                } else if (!_graph.isFirstVertex(vertex)) {
                     auto newChain = new Chain;
                     newChain->vertex = _graph.searchVertexInNodes(vertex)->startVertex;
                     _graph.addVertexToChain(newChain, vertex);
                     _graph.chains.push_back(newChain);
                 }
-                mergeChains(&_graph);
+                _graph = mergeChains(_graph);
             } else if (!_graph.isFirstVertex(vertex) && 1 == _graph.exodus(vertex)) {
                 for (int i = 0; i < _graph.countOfVertexes; ++i) {
                     if (_graph.searchStartVertexInNodes(vertex)->startVertex != _graph.vertexes[i])
@@ -480,21 +485,29 @@ Graph Graph::step2(Graph _graph)
                 if (_graph.zeroDeg()) return _graph;
                 if (_graph.isFirstVertex(_graph.searchStartVertexInNodes(vertex)->endVertex)) {
                     for (auto chain : _graph.chains)
-                        if (_graph.searchStartVertexInNodes(vertex)->endVertex == chain->vertex)
+                        if (_graph.searchStartVertexInNodes(vertex)->endVertex == chain->vertex) {
                             _graph.addVertexInBeginOfChain(chain, vertex);
+                            chain = chain->prev;
+                        }
+
                 } else {
                     auto newChain = new Chain;
                     newChain->vertex = vertex;
                     addVertexToChain(newChain, _graph.searchStartVertexInNodes(vertex)->endVertex);
                     _graph.chains.push_back(newChain);
                 }
-                mergeChains(&_graph);
+                _graph = mergeChains(_graph);
             }
         }
         _graph.deleteCycles();
+//        if (_graph.zeroDeg()) {
+//            return _graph;
+//        }
         if (_graph.zeroDeg()) {
-            return _graph;
+            const Graph &graph(_graph);
+            return graph;
         }
+
         oneDegVertexes = _graph.oneDeg();
     }
 
@@ -533,14 +546,27 @@ Graph::Chain* Graph::addVertexToChain(Chain* _chain, int _vertex)
     chain->next = newChain;
 }
 
-void Graph::addVertexInBeginOfChain(Graph::Chain *_chain, int _vertex)
+Graph::Chain * Graph::addVertexInBeginOfChain(Graph::Chain *_chain, int _vertex)
 {
     Chain* chain = _chain;
-    auto newChain = new Chain;
-    newChain->vertex = _vertex;
-    newChain->next = chain;
-    chain->prev = newChain;
-    _chain = newChain;
+    int insertVertex = _vertex;
+    int oldVertex;
+
+//    auto newChain = new Chain;
+//    newChain->vertex = _vertex;
+//    newChain->next = chain;
+//    chain->prev = newChain;
+//    _chain = newChain;
+
+    while (chain) {
+        oldVertex = chain->vertex;
+        chain->vertex = insertVertex;
+        chain = chain->next;
+        insertVertex = oldVertex;
+    }
+
+    this->addVertexToChain(_chain, insertVertex);
+    return _chain;
 }
 
 int Graph::lastVertex(Graph::Chain* _chain)
@@ -566,39 +592,39 @@ bool Graph::isFirstVertex(int _vertex)
     return false;
 }
 
-void Graph::mergeChains(Graph* _graph)
+Graph Graph::mergeChains(Graph _graph)
 {
-    auto chainsIterI = chains.begin();
-    auto chainsIterJ = chains.begin();
+    auto chainsIterI = _graph.chains.begin();
+    auto chainsIterJ = _graph.chains.begin();
 
 //    for (auto chain : chains) {
 //        int last = _graph->lastVertex(*chainsIter);
 //        if (lastVertex(chain) == )
 //    }
 
-    for (int i = 0; i < chains.size(); ++i) {
-        for (int j = 0; j < chains.size(); ++j) {
-            if (_graph->chains[j]->vertex == _graph->lastVertex(chains[i]) && j) {
-                Chain* chain = chains[j]->next;
-                while (chain->next) {
-                    _graph->addVertexToChain(chains[i], chain->vertex);
+    for (int i = 0; i < _graph.chains.size(); ++i) {
+        for (int j = 0; j < _graph.chains.size(); ++j) {
+            if (_graph.chains[j]->vertex == _graph.lastVertex(_graph.chains[i]) && j) {
+                Chain* chain = _graph.chains[j]->next;
+                while (chain) {
+                    _graph.addVertexToChain(_graph.chains[i], chain->vertex);
                     chain = chain->next;
                 }
-                chains.erase(chainsIterJ);
-            } else if (_graph->chains[j]->vertex == _graph->lastVertex(chains[i]) && !j) {
-                Chain* chain = chains[i];
+                _graph.chains.erase(chainsIterJ);
+            } else if (_graph.chains[j]->vertex == _graph.lastVertex(_graph.chains[i]) && !j) {
+                Chain* chain = _graph.chains[i];
                 while (chain->next) {
                     chain = chain->next;
                 }
                 while (chain->prev) {
-                    _graph->addVertexInBeginOfChain(chains[j], chain->vertex);
+                    _graph.addVertexInBeginOfChain(_graph.chains[j], chain->vertex);
                     chain = chain->prev;
                 }
-                chains.erase(chainsIterI);
+                _graph.chains.erase(chainsIterI);
             }
             chainsIterJ++;
         }
-        chainsIterJ = chains.begin();
+        chainsIterJ = _graph.chains.begin();
         chainsIterI++;
     }
 
@@ -610,7 +636,7 @@ void Graph::mergeChains(Graph* _graph)
 //    for (auto chainsIter = chains.begin(); chainsIter != chains.end(); chainsIter++) {
 //
 //    }
-
+    return _graph;
 }
 
 int Graph::sizeOfChain(Graph::Chain *_chain)
@@ -621,7 +647,10 @@ int Graph::sizeOfChain(Graph::Chain *_chain)
 
     int count = 0;
 
-    while (chain->next) ++count;
+    while (chain) {
+        ++count;
+        chain = chain->next;
+    }
 
     return count;
 }
@@ -631,14 +660,17 @@ void Graph::printHamCycle(Graph _graph)
     auto chain = _graph.chains[0];
 
     while (chain->next) {
-        cout << chain->vertex << "->";
+        cout << chain->vertex << " -> ";
+        chain = chain->next;
     }
+    cout << chain->vertex;
     cout << endl;
 }
 
 bool Graph::isHam()
 {
-    return (sizeOfChain(this->chains[0]) == countOfVertexes);
+    Chain* chain = this->chains[0];
+    return (sizeOfChain(chain) == countOfVertexes);
 }
 
 void Graph::deleteCycles()
@@ -646,4 +678,16 @@ void Graph::deleteCycles()
     for (auto chain : this->chains) {
         if (searchArc(lastVertex(chain), chain->vertex)) this->removeArc(lastVertex(chain), chain->vertex);
     }
+}
+
+Graph::GraphNode* Graph::searchLastVertexInNodes(int _vertex)
+{
+    GraphNode* node = listOfNOdes;
+
+    while (node) {
+        if (_vertex == node->endVertex) return node;
+        node = node->next;
+    }
+
+    return nullptr;
 }

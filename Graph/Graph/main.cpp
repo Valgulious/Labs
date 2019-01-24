@@ -41,13 +41,43 @@ int main() {
     cout << graph.wideBypass(1) << endl;*/
 
 
-    graph.addArc(1,2);
-    graph.addArc(2,3);
-    graph.addArc(3,4);
-    graph.addArc(1,3);
-    graph.addArc(2,4);
-    graph.addArc(4,1);
+//    graph.addArc(1,2);
+//    graph.addArc(2,3);
+//    graph.addArc(3,4);
+//    graph.addArc(1,3);
+//    graph.addArc(2,4);
+//    graph.addArc(4,1);
 
+    graph.addArc(1,2);
+    graph.addArc(1,3);
+    graph.addArc(1,6);
+    graph.addArc(1,10);
+    graph.addArc(2,6);
+    graph.addArc(3,2);
+    graph.addArc(3,4);
+    graph.addArc(4,1);
+    graph.addArc(4,2);
+    graph.addArc(10,4);
+    graph.addArc(4,10);
+    graph.addArc(6,8);
+    graph.addArc(8,1);
+    graph.addArc(8,9);
+    graph.addArc(9,1);
+    graph.addArc(9,10);
+    graph.addArc(9,8);
+    graph.addArc(10,10);
+    graph.addArc(1,1);
+    graph.addArc(4,4);
+    graph.addArc(2,2);
+
+    graph.print();
+
+    cout << graph.hamiltonCycles() << endl;
+
+    graph.print();
+
+    graph.removeArc(4,5);
+    graph.print();
     cout << graph.hamiltonCycles() << endl;
     return 0;
 }

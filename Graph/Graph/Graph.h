@@ -72,11 +72,16 @@ private:
     Graph step2(Graph _graph);
     Graph mergeChains(Graph _graph);
     bool isHam();
+    bool isHam(Graph _graph);
+    void remArc(int _startVertex, int _endVertex);
 //    void step3(Graph _graph);
+
+    void printVertexes(); //Печать вершин дерева
 
 public:
     Graph() = default;
     Graph(const Graph & _graph);
+    ~Graph();
 
     int searchVertex(int _vertex);//Поиск вершины
     int removeVertex(int _vertex);//Удаление вершины
@@ -86,7 +91,6 @@ public:
     int removeArc(int _startVertex, int _endVertex);//Удаление дуги
 
     void print(); //Печать дерева
-    void printVertexes(); //Печать вершин дерева
 
     int wideBypass(int _vertex); // Обход в ширину с посещением всех вершин
 

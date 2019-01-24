@@ -93,5 +93,7 @@ int main() {
     hamiltonCycle8();
     hamiltonCycle9();
     hamiltonCycle10();
+    hamiltonCycle11();
+    hamiltonCycle12();
     return 0;
 }

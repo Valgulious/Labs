@@ -550,12 +550,9 @@ void hamiltonCycle9() {
     Graph graph;
 
     graph.addArc(1,2);
-    graph.addArc(1,3);
     graph.addArc(1,6);
     graph.addArc(1,10);
     graph.addArc(2,6);
-    graph.addArc(3,2);
-    graph.addArc(3,4);
     graph.addArc(4,1);
     graph.addArc(4,2);
     graph.addArc(10,4);
@@ -604,6 +601,71 @@ void hamiltonCycle10() {
 
     if (!graph.hamiltonCycle()) {
         cout << "Test hamiltonCycle10 passed"  << endl;
+        cout << "----------------------"  << endl;
+    }
+}
+
+void hamiltonCycle11() {
+
+    Graph graph;
+
+    graph.addArc(1,2);
+    graph.addArc(1,3);
+    graph.addArc(1,6);
+    graph.addArc(1,10);
+    graph.addArc(2,6);
+    graph.addArc(3,2);
+    graph.addArc(3,4);
+    graph.addArc(4,1);
+    graph.addArc(4,2);
+    graph.addArc(10,4);
+    graph.addArc(4,10);
+    graph.addArc(6,8);
+    graph.addArc(8,1);
+    graph.addArc(8,9);
+    graph.addArc(9,1);
+    graph.addArc(9,10);
+    graph.addArc(9,8);
+
+    for (int i = 0; i < 10; i += 2) {
+        graph.removeVertex(i);
+    }
+
+    graph.print();
+
+    if (!graph.hamiltonCycle()) {
+        cout << "Test hamiltonCycle11 passed"  << endl;
+        cout << "----------------------"  << endl;
+    }
+}
+
+void hamiltonCycle12() {
+
+    Graph graph;
+
+    graph.addArc(1,2);
+    graph.addArc(1,6);
+    graph.addArc(1,10);
+    graph.addArc(2,6);
+    graph.addArc(4,1);
+    graph.addArc(4,2);
+    graph.addArc(10,4);
+    graph.addArc(4,10);
+    graph.addArc(6,8);
+    graph.addArc(8,1);
+    graph.addArc(8,9);
+    graph.addArc(9,1);
+    graph.addArc(9,10);
+    graph.addArc(9,8);
+    graph.addArc(3,2);
+    graph.addArc(3,4);
+
+    graph.addArc(1,3);
+
+    graph.print();
+
+    if (1 == graph.hamiltonCycle()) {
+        cout << "Test hamiltonCycle12 passed"  << endl;
         cout << "----------------------"  << endl;
     }
 }

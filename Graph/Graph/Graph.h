@@ -83,18 +83,18 @@ public:
     Graph(const Graph & _graph);
     ~Graph();
 
-    int searchVertex(int _vertex);//Поиск вершины
-    int removeVertex(int _vertex);//Удаление вершины
+    int searchVertex(int _vertex);//Поиск вершины +++
+    int removeVertex(int _vertex);//Удаление вершины +++
 
-    int addArc(int _startVertex, int _endVertex); //Добавление дуги
-    int searchArc(int _startVertex, int _endVertex); //Поиск дуги
-    int removeArc(int _startVertex, int _endVertex);//Удаление дуги
+    int addArc(int _startVertex, int _endVertex); //Добавление дуги +++
+    int searchArc(int _startVertex, int _endVertex); //Поиск дуги +++
+    int removeArc(int _startVertex, int _endVertex);//Удаление дуги +++
 
-    void print(); //Печать дерева
+    void print(); //Печать дерева +++
 
     int wideBypass(int _vertex); // Обход в ширину с посещением всех вершин
 
-    int hamiltonCycles();
+    int hamiltonCycle(); // Поиск гамильтонова цикла
 };
 
 

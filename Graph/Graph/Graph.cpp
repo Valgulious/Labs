@@ -158,11 +158,11 @@ void Graph::print()
 
 int Graph::wideBypass(int _vertex)
 {
-    if (!this->listOfNOdes) return 1;
+    if (!this->listOfNOdes) return 2;
 
     GraphNode* node = searchStartVertexInNodes(_vertex);
 
-    if (!node) return 2;
+    if (!node) return 1;
 
     addToQueue(node->startVertex);
     markVertex(node->startVertex);
@@ -395,7 +395,7 @@ vector<int> Graph::oneDeg() {
     return arr;
 }
 
-int Graph::hamiltonCycles()
+int Graph::hamiltonCycle()
 {
     GraphNode *node = this->listOfNOdes;
 
@@ -424,11 +424,11 @@ int Graph::hamiltonCycles()
        Graph newGraph(ham(graph));
        if (newGraph.isHam(*this)) {
            printHamCycle(newGraph);
-           return 0;
+           return 1;
        }
    }
 
-    return 1;
+    return 0;
 }
 
 Graph Graph::ham(Graph _graph)

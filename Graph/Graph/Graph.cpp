@@ -26,6 +26,11 @@ Graph::~Graph(){
     this->chains.clear();
 }
 
+int Graph::searchVertex(int _vertex)
+{
+    return searchVertexInNodes(_vertex) ? 1 : 0;
+}
+
 int Graph::removeVertex(int _vertex)
 {
 

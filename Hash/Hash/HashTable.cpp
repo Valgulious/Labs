@@ -15,13 +15,9 @@ void HashTable::print() {
     for (int i = 0; i<SIZE; i++){
         cout << i
              << ' '
-             << hash_table[i].lesson_number
+             << hash_table[i].phone
              << ' '
-             << hash_table[i].class_number
-             << ' '
-             << hash_table[i].name_of_lesson
-             << ' '
-             << hash_table[i].FIO
+             << hash_table[i].name
              << ' '
              << hash_table[i].hash_key
              << ' '
@@ -30,10 +26,14 @@ void HashTable::print() {
     }
 }
 
-int HashTable::hash1(string class_number, string lesson_number) {
-    string s = class_number + lesson_number;
-    int a = (int(s[0])+int(s[1])+int(s[2])+int(s[3])+int(s[4]))%SIZE;
-    return a;
+int HashTable::hash1(string phone) {
+//    string s = class_number + lesson_number;
+//    int a = (int(s[0])+int(s[1])+int(s[2])+int(s[3])+int(s[4]))%SIZE;
+    int a = 0;
+    for (int i = 0; i < phone.length(); i++) {
+        a += int(phone[i]);
+    }
+    return a%SIZE;
 }
 
 int HashTable::hash2 (int i) {
@@ -42,31 +42,28 @@ int HashTable::hash2 (int i) {
 }
 
 void HashTable::add(Hash h, int i){
-    hash_table[i].lesson_number = h.lesson_number;
-    hash_table[i].class_number = h.class_number;
+    hash_table[i].phone = h.phone;
     hash_table[i].hash_key = i;
-    hash_table[i].FIO = h.FIO;
-    hash_table[i].name_of_lesson = h.name_of_lesson;
+    hash_table[i].name = h.name;
     hash_table[i].status = 1;
     count++;
 }
 
 int HashTable::addRecord(Hash h) {
-    int hash = hash1(h.class_number, h.lesson_number);
+    int hash = hash1(h.phone);
     if (searchRecord(h) == -1) {
         if (hash_table[hash].status == 0) {
             add(h, hash);
         } else if (hash_table[hash].status == 1) {
             while (hash_table[hash].status == 1) {
-                if (hash_table[hash].class_number == h.class_number
-                        and hash_table[hash].lesson_number == h.lesson_number) return -2;
+                if (hash_table[hash].phone == h.phone) return -2;
                 else hash = hash2(hash);
             }
             add(h, hash);
         } else add(h, hash);
     } else return -1;
     float b = float(count)/float(SIZE);
-    if ( b >= RATIO) resizeTable();
+    if ( b > RATIO) resizeTable();
     return 0;
 }
 
@@ -76,10 +73,8 @@ void HashTable::resizeTable() {
     for (int i = 0; i < SIZE; i++) {
         new_table[i].status = hash_table[i].status;
         new_table[i].hash_key = hash_table[i].hash_key;
-        new_table[i].lesson_number = hash_table[i].lesson_number;
-        new_table[i].class_number = hash_table[i].class_number;
-        new_table[i].name_of_lesson = hash_table[i].name_of_lesson;
-        new_table[i].FIO = hash_table[i].FIO;
+        new_table[i].phone = hash_table[i].phone;
+        new_table[i].name = hash_table[i].name;
         hash_table[i].status = 0;
         
     }
@@ -94,10 +89,8 @@ void HashTable::resizeTable() {
 }
 
 int HashTable::compare(Hash h, int i) {
-    if (hash_table[i].class_number == h.class_number
-        and hash_table[i].lesson_number == h.lesson_number
-        and hash_table[i].FIO == h.FIO
-        and hash_table[i].name_of_lesson == h.name_of_lesson
+    if (hash_table[i].phone == h.phone
+        and hash_table[i].name == h.name
         and hash_table[i].status == 1) {
         return true;
     } else return false;
@@ -105,7 +98,7 @@ int HashTable::compare(Hash h, int i) {
 
 int HashTable::searchRecord(Hash h) {
     int deep = 0;
-    int hash = hash1(h.class_number, h.lesson_number);
+    int hash = hash1(h.phone);
     while (deep <= SIZE and hash_table[hash].status != 0){
         if (compare(h, hash)) return hash;
         else hash = hash2(hash);

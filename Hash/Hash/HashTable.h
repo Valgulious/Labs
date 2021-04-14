@@ -7,7 +7,7 @@ using namespace std;
 struct Hash {
     int hash_key = -1;
     unsigned short int status = 0;
-    string FIO = "----------", name_of_lesson = "--------", class_number = "----", lesson_number = "-";
+    string phone = "----------", name = "--------";
 };
 
 class HashTable
@@ -27,7 +27,7 @@ private:
     int SIZE, count = 0;
     float RATIO;
 
-    int hash1 (string, string);
+    int hash1 (string);
     int hash2 (int);
     void add(Hash, int);
     int compare(Hash, int);

@@ -52,6 +52,14 @@ int main() {
 //    h.addRecord(h10);
 
     h.print();
+
+    cout << h.deleteRecord(h6) << endl;
+    cout << h.deleteRecord(h7) << endl;
+    cout << h.deleteRecord(h5) << endl;
+    cout << h.deleteRecord(h4) << endl;
+    cout << h.deleteRecord(h3) << endl;
+
+    h.print();
 //    h1.FIO = "aaa";
 //    h1.name_of_lesson = "bbbbb";
 //    h1.lesson_number = "2";

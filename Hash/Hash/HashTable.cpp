@@ -112,6 +112,29 @@ int HashTable::deleteRecord(Hash h) {
     if (hash != -1) {
         hash_table[hash].status = 2;
         count--;
+
+        if ((float(count)/float(SIZE)) <= 0.25) {
+            Hash* new_table = new Hash[SIZE];
+
+            for (int i = 0; i < SIZE; i++) {
+                new_table[i].status = hash_table[i].status;
+                new_table[i].hash_key = hash_table[i].hash_key;
+                new_table[i].phone = hash_table[i].phone;
+                new_table[i].name = hash_table[i].name;
+                hash_table[i].status = 0;
+
+            }
+            delete [] hash_table;
+            hash_table = new Hash[int(SIZE/2)];
+            int size = SIZE;
+            SIZE = int(SIZE/2);
+            count = 0;
+            for (int i = 0; i < size; i++){
+                if (new_table[i].status == 1) addRecord(new_table[i]);
+            }
+            delete [] new_table;
+        }
+
         return 0;
     } else return 1;
 }
